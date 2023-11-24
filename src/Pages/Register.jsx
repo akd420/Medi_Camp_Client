@@ -4,9 +4,11 @@ import useAuth from "../Hooks/useAuth";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { TbFidgetSpinner } from "react-icons/tb";
+import { useState } from "react";
 
 const Register = () => {
-  const { googleLogin, createUser, loading } = useAuth();
+  const { googleLogin, createUser } = useAuth();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const toast = useToast();
@@ -30,7 +32,7 @@ const Register = () => {
       });
       return;
     }
-
+    setLoading(true);
     createUser(email, password)
       .then((result) => {
         updateProfile(result.user, {
@@ -39,19 +41,24 @@ const Register = () => {
         });
         navigate(location?.state ? location.state : "/");
         toast.success({ content: "Registered successfully" });
+        setLoading(false);
       })
       .catch((error) => {
         toast.error({ content: error.message });
+        setLoading(false);
       });
   };
   const handleGoogleLogin = () => {
+    setLoading(true);
     googleLogin()
       .then(() => {
         navigate(location?.state ? location.state : "/");
         toast.success({ content: "Registered successfully" });
+        setLoading(false);
       })
       .catch((error) => {
         toast.error({ content: error.message });
+        setLoading(false);
       });
   };
   return (

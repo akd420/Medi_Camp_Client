@@ -41,6 +41,7 @@ import { baseURL } from "../Hooks/useAxiosPublic";
   
     //sign out
     const signOutUser = () => {
+      setLoading(true);
       return signOut(auth);
     };
   

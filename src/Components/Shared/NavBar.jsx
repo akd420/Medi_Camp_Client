@@ -1,8 +1,7 @@
 import { Link, NavLink } from "react-router-dom";
 import useAuth from "../../Hooks/useAuth";
 import useToast from "./useToast";
-import CustomButton from "./CustomButton";
-
+import { motion } from "framer-motion";
 const NavBar = () => {
   const { user, signOutUser } = useAuth();
   const toast = useToast();
@@ -78,7 +77,7 @@ const NavBar = () => {
     </>
   );
   return (
-    <div className="bg-base-200 bg-opacity-50 backdrop-blur-lg left-0 right-0 sticky top-0 z-10">
+    <div className="bg-red-200 bg-opacity-50 backdrop-blur-lg left-0 right-0 sticky top-0 z-10">
       <div className="navbar max-w-screen-xl mx-auto p-4">
         <div className="navbar-start">
           <div className="dropdown">
@@ -154,11 +153,11 @@ const NavBar = () => {
           ) : (
             <div className="flex flex-col md:flex-row text-center items-center">
               <Link to={"/login"}>
-                <CustomButton>Login</CustomButton>
+                <motion.button className="btn bg-rose text-white btn-xs md:btn-md hover:bg-rose border-none">Login</motion.button>
               </Link>
               <p className="text-lg mx-2">or</p>
               <Link to={"/register"}>
-                <CustomButton>Register</CustomButton>
+                <motion.button className="btn bg-rose text-white btn-xs md:btn-md hover:bg-rose border-none">Register</motion.button>
               </Link>
             </div>
           )}

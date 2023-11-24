@@ -4,13 +4,15 @@ import { FcGoogle } from "react-icons/fc";
 import { TbFidgetSpinner } from "react-icons/tb";
 import useAuth from "../Hooks/useAuth";
 import useToast from "../Components/Shared/useToast";
+import { useState } from "react";
 
 const Login = () => {
-  const { signInUser, googleLogin, loading } = useAuth();
+  const { signInUser, googleLogin } = useAuth();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location?.state?.from?.pathname || "/";
   const toast = useToast();
+  console.log(loading);
 
   // form submit handler
   const handleSubmit = async (e) => {
@@ -19,40 +21,63 @@ const Login = () => {
     const email = form.email.value;
     const password = form.password.value;
 
-    try {
-      //2. User Login
-      //   const result = await signInUser(email, password)
-      //5. get token
-      //   await getToken(result?.user?.email)
-      signInUser(email, password);
-      navigate(from, { replace: true });
-      toast.success({content: "Login Successful"});
-    } catch (err) {
-      console.log(err);
-      toast.error({content: err?.message});
-    }
+    // try {
+    //   //2. User Login
+    //   //   const result = await signInUser(email, password)
+    //   //5. get token
+    //   //   await getToken(result?.user?.email)
+    //   signInUser(email, password)
+    //   toast.success({content: "Login Successful"});
+    //   navigate(from, { replace: true });
+    // } catch (err) {
+    //   console.log(err);
+    //   toast.error({content: err?.message});
+    // }
+
+    setLoading(true);
+    signInUser(email, password)
+      .then(() => {
+        navigate(location?.state ? location.state : "/");
+        toast.success({content: "Login Successful"});
+        setLoading(false);
+      })
+      .catch((error) => {
+        toast.error({content: error.message});
+        setLoading(false);
+      });
   };
 
   // Handle Google signInUser
   const handleGoogleSignInUser = async () => {
-    try {
-      //2. User Registration using google
-      //   const result = await googleLogin();
+    // try {
+    //   //2. User Registration using google
+    //   //   const result = await googleLogin();
 
-      //4. save user data in database
-      //   const dbResponse = await saveUser(result?.user);
-      //   console.log(dbResponse);
+    //   //4. save user data in database
+    //   //   const dbResponse = await saveUser(result?.user);
+    //   //   console.log(dbResponse);
 
-      //5. get token
-      //   await getToken(result?.user?.email);
-      googleLogin().then(() => {
-        navigate(from, { replace: true });
+    //   //5. get token
+    //   //   await getToken(result?.user?.email);
+    //   googleLogin().then(() => {
+    //     navigate(from, { replace: true });
+    //     toast.success({content: "Login Successful"});
+    //   })
+    // } catch (err) {
+    //   console.log(err);
+    //   toast.error({content: err?.message});
+    // }
+    setLoading(true);
+    googleLogin()
+      .then(() => {
+        navigate(location?.state ? location.state : "/");
         toast.success({content: "Login Successful"});
+        setLoading(false);
       })
-    } catch (err) {
-      console.log(err);
-      toast.error({content: err?.message});
-    }
+      .catch((error) => {
+        toast.error({content: error.message});
+        setLoading(false);
+      });
   };
   return (
     <div className="flex justify-center items-center min-h-screen">
