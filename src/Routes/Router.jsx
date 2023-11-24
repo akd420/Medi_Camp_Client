@@ -6,11 +6,14 @@ import Register from "../Pages/Register";
 import DashBoard from "../Pages/DashBoard/DashBoard";
 import AvailableCamps from "../Pages/AvailableCamps/AvailableCamps";
 import ContactUs from "../Pages/ContactUs/ContactUs";
+import NotFound from "../Pages/NotFound";
+import PrivateRoute from "./PrivateRoute";
 
 const Router = createBrowserRouter([
   {
     path: "/",
     element: <Root></Root>,
+    errorElement: <NotFound></NotFound>,
     children: [
       {
         path: "/",
@@ -25,10 +28,6 @@ const Router = createBrowserRouter([
         element: <Register></Register>,
       },
       {
-        path: "/dashboard",
-        element: <DashBoard></DashBoard>,
-      },
-      {
         path: "/camps",
         element: <AvailableCamps></AvailableCamps>,
       },
@@ -37,6 +36,21 @@ const Router = createBrowserRouter([
         element: <ContactUs></ContactUs>,
       },
     ],
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <PrivateRoute>
+        <DashBoard></DashBoard>
+      </PrivateRoute>
+    ),
+    errorElement: <NotFound></NotFound>,
+    // children: [
+    //   {
+    //     path: "/",
+    //     element: <DashBoard></DashBoard>,
+    //   },
+    // ],
   },
 ]);
 
