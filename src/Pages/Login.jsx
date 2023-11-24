@@ -1,20 +1,21 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 // import { getToken, saveUser } from '../../api/auth'
-import toast from "react-hot-toast";
 import { TbFidgetSpinner } from "react-icons/tb";
 import useAuth from "../Hooks/useAuth";
+import useToast from "../Components/Shared/useToast";
 
 const Login = () => {
   const { signInUser, googleLogin, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location?.state?.from?.pathname || "/";
+  const toast = useToast();
 
   // form submit handler
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const form = event.target;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const form = e.target;
     const email = form.email.value;
     const password = form.password.value;
 
@@ -25,10 +26,10 @@ const Login = () => {
       //   await getToken(result?.user?.email)
       signInUser(email, password);
       navigate(from, { replace: true });
-      toast.success("Login Successful");
+      toast.success({content: "Login Successful"});
     } catch (err) {
       console.log(err);
-      toast.error(err?.message);
+      toast.error({content: err?.message});
     }
   };
 
@@ -46,11 +47,11 @@ const Login = () => {
       //   await getToken(result?.user?.email);
       googleLogin().then(() => {
         navigate(from, { replace: true });
-        toast.success("Login Successful");
+        toast.success({content: "Login Successful"});
       })
     } catch (err) {
       console.log(err);
-      toast.error(err?.message);
+      toast.error({content: err?.message});
     }
   };
   return (

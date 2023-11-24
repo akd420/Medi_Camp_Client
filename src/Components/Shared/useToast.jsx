@@ -1,26 +1,15 @@
-// useToast.js
-import { toast } from 'react-hot-toast';
+import { toast } from "react-hot-toast";
 
 const useToast = () => {
-  const success = ({ content, icon }) => {
+  const success = ({ content }) => {
     return toast.success(content, {
-      icon: icon,
-      style: {
-        borderRadius: '10px',
-        background: '#333',
-        color: '#fff',
-      },
+      icon: "✅",
     });
   };
 
-  const error = ({ content, icon }) => {
+  const error = ({ content }) => {
     return toast.error(content, {
-      icon: icon,
-      style: {
-        borderRadius: '10px',
-        background: '#333',
-        color: '#fff',
-      },
+      icon: "❌",
     });
   };
 

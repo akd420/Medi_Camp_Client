@@ -10,10 +10,10 @@ const NavBar = () => {
   const logOut = () => {
     signOutUser()
       .then(() => {
-        toast.success({ content: "Logout Successful", icon: "✅" });
+        toast.success({ content: "Logout Successful" });
       })
       .catch((error) => {
-        toast.error({ content: error.message, icon: "❌" });
+        toast.error({ content: error.message });
       });
   };
 
