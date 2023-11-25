@@ -11,10 +11,10 @@ import {
           <aside className="flex items-center gap-2 flex-col md:flex-row">
             <img className="w-4/12 md:w-2/12 mr-3" src="/logo.png" alt="" />
             <div>
-            <p className="text-2xl lg:text-4xl ">
-              Wander
+            <p className="text-2xl lg:text-4xl">
+              Medi
               <span className="font-semibold text-rose">
-                land
+                Camp
               </span>
               <br />
               Organizing Relaiable Camps Since 1965

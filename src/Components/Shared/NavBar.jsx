@@ -77,7 +77,7 @@ const NavBar = () => {
     </>
   );
   return (
-    <div className="bg-red-200 bg-opacity-50 backdrop-blur-lg left-0 right-0 sticky top-0 z-10">
+    <div className="bg-red-200 bg-opacity-50 backdrop-blur-lg left-0 right-0 sticky top-0 z-50">
       <div className="navbar max-w-screen-xl mx-auto p-4">
         <div className="navbar-start">
           <div className="dropdown">
