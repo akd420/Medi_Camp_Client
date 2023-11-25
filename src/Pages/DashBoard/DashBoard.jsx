@@ -40,6 +40,9 @@ const DashBoard = () => {
           My Profile
         </NavLink>
       </li>
+      <div>
+        <hr />
+      </div>
       <li>
         <NavLink
           className={({ isActive, isPending }) =>
@@ -55,6 +58,9 @@ const DashBoard = () => {
           Add Camps
         </NavLink>
       </li>
+      <div>
+        <hr />
+      </div>
       <li>
         <NavLink
           className={({ isActive, isPending }) =>
@@ -70,6 +76,9 @@ const DashBoard = () => {
           Manage Camps
         </NavLink>
       </li>
+      <div>
+        <hr />
+      </div>
       <li>
         <NavLink
           className={({ isActive, isPending }) =>

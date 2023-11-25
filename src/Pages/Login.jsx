@@ -9,30 +9,20 @@ import { useState } from "react";
 const Login = () => {
   const { signInUser, googleLogin } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [showRoleModal, setShowRoleModal] = useState(false);
+const [selectedRole, setSelectedRole] = useState(null);
+
   const navigate = useNavigate();
   const location = useLocation();
   const toast = useToast();
   console.log(loading);
 
-  // form submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.target;
     const email = form.email.value;
     const password = form.password.value;
 
-    // try {
-    //   //2. User Login
-    //   //   const result = await signInUser(email, password)
-    //   //5. get token
-    //   //   await getToken(result?.user?.email)
-    //   signInUser(email, password)
-    //   toast.success({content: "Login Successful"});
-    //   navigate(from, { replace: true });
-    // } catch (err) {
-    //   console.log(err);
-    //   toast.error({content: err?.message});
-    // }
 
     setLoading(true);
     signInUser(email, password)
@@ -48,37 +38,19 @@ const Login = () => {
   };
 
   // Handle Google signInUser
-  const handleGoogleSignInUser = async () => {
-    // try {
-    //   //2. User Registration using google
-    //   //   const result = await googleLogin();
-
-    //   //4. save user data in database
-    //   //   const dbResponse = await saveUser(result?.user);
-    //   //   console.log(dbResponse);
-
-    //   //5. get token
-    //   //   await getToken(result?.user?.email);
-    //   googleLogin().then(() => {
-    //     navigate(from, { replace: true });
-    //     toast.success({content: "Login Successful"});
-    //   })
-    // } catch (err) {
-    //   console.log(err);
-    //   toast.error({content: err?.message});
-    // }
-    setLoading(true);
-    googleLogin()
-      .then(() => {
-        navigate(location?.state ? location.state : "/");
-        toast.success({content: "Login Successful"});
-        setLoading(false);
-      })
-      .catch((error) => {
-        toast.error({content: error.message});
-        setLoading(false);
-      });
-  };
+  // const handleGoogleSignInUser = async () => {
+  //   setLoading(true);
+  //   googleLogin()
+  //     .then(() => {
+  //       navigate(location?.state ? location.state : "/");
+  //       toast.success({content: "Login Successful"});
+  //       setLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       toast.error({content: error.message});
+  //       setLoading(false);
+  //     });
+  // };
   return (
     <div className="flex justify-center items-center min-h-screen">
       <div className="flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900">

@@ -5,14 +5,32 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { TbFidgetSpinner } from "react-icons/tb";
 import { useState } from "react";
+import { axiosSecure } from "../Hooks/useAxios";
 
 const Register = () => {
   const { googleLogin, createUser } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [showRoleModal, setShowRoleModal] = useState(false);
+  const [selectedRole, setSelectedRole] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
   const toast = useToast();
-  const handleRegister = (e) => {
+  const { user } = useAuth();
+  const handleRoleSelect = async (role) => {
+    setSelectedRole(role);
+    try {
+      await postDataToDatabase({
+        name: user?.displayName,
+        email: user?.email,
+        role: role,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    setShowRoleModal(false);
+  };
+
+  const handleRegister = async (e) => {
     e.preventDefault();
     const name = e.target.name.value;
     const image = e.target.image.value;
@@ -33,33 +51,106 @@ const Register = () => {
       return;
     }
     setLoading(true);
-    createUser(email, password)
-      .then((result) => {
-        updateProfile(result.user, {
-          displayName: name,
-          photoURL: image,
-        });
-        navigate(location?.state ? location.state : "/");
-        toast.success({ content: "Registered successfully" });
-        setLoading(false);
-      })
-      .catch((error) => {
-        toast.error({ content: error.message });
-        setLoading(false);
+    // createUser(email, password)
+    //   .then((result) => {
+    //     updateProfile(result.user, {
+    //       displayName: name,
+    //       photoURL: image,
+    //     });
+    //     navigate(location?.state ? location.state : "/");
+    //     toast.success({ content: "Registered successfully" });
+    //     setLoading(false);
+    //   })
+    //   .catch((error) => {
+    //     toast.error({ content: error.message });
+    //     setLoading(false);
+    //   });
+    try {
+      const result = await createUser(email, password);
+      await updateProfile(result.user, {
+        displayName: name,
+        photoURL: image,
       });
+
+      // Open the role selection after creating a user
+      // You can customize the role selection UI as per your design
+      setShowRoleModal(true); // Reset selected role
+      toast.success({ content: "Registered successfully" });
+    } catch (error) {
+      toast.error({ content: error.message });
+    } finally {
+      setLoading(false);
+    }
   };
-  const handleGoogleLogin = () => {
+  // const handleGoogleLogin = async () => {
+  //   setLoading(true);
+  //   googleLogin()
+  //     .then(() => {
+  //       try{
+  //         const userExists = await checkUserExists(user?.email);
+  //         if(userExists){
+  //           navigate(location?.state ? location.state : "/");
+  //           toast.success({ content: "Logged in successfully" });
+  //         } else {
+  //           setShowRoleModal(true);
+  //         }
+  //       } catch(error){
+  //         toast.error({ content: error.message });
+  //       } finally {
+  //         setLoading(false);
+  //       }
+  //       toast.success({ content: "Registered successfully" });
+  //       setShowRoleModal(true);
+  //       setLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       toast.error({ content: error.message });
+  //       setLoading(false);
+  //     });
+  // };
+  const handleGoogleLogin = async () => {
     setLoading(true);
-    googleLogin()
-      .then(() => {
+  
+    try {
+      const result = await googleLogin();
+  
+      // Check if the user already exists in the database
+      const userExists = await checkUserExists(result.user?.email);
+  
+      if (userExists) {
+        // User exists, proceed to navigate
         navigate(location?.state ? location.state : "/");
+        toast.success({ content: "Logged in successfully" });
+      } else {
+        // User doesn't exist, show the role selection modal
+        setShowRoleModal(true);
         toast.success({ content: "Registered successfully" });
-        setLoading(false);
-      })
-      .catch((error) => {
-        toast.error({ content: error.message });
-        setLoading(false);
-      });
+      }
+    } catch (error) {
+      toast.error({ content: error.message });
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+
+  const postDataToDatabase = async (data) => {
+    try {
+      await axiosSecure.post("users", data);
+      navigate(location?.state ? location.state : "/");
+      toast.success({ content: "User Saved to Database" });
+    } catch (error) {
+      toast.error({ content: "Error sending data to the database" });
+    }
+  };
+  const checkUserExists = async (email) => {
+    try {
+      const response = await axiosSecure.get(`users?email=${email}`);
+      return response.data.length > 0;
+    } catch (error) {
+      console.error(error);
+      throw new Error("Error checking user existence");
+    }
   };
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -148,6 +239,69 @@ const Register = () => {
             </button>
           </div>
         </form>
+        {/* role modal section */}
+
+        {showRoleModal && (
+          <div>
+            {/* Put this part before </body> tag */}
+            <input
+              type="checkbox"
+              id="my_modal_6"
+              className="modal-toggle"
+              defaultChecked={showRoleModal}
+            />
+            <div
+              className={`modal ${showRoleModal ? "open" : ""}`}
+              role="dialog"
+              onClick={() => setShowRoleModal(false)}
+            >
+              <div className="modal-box">
+                <h3 className="font-bold text-lg text-center">
+                  Select Your <span className="text-rose">Role</span>
+                </h3>
+                <div className="mt-5">
+                  <div className="flex flex-wrap gap-6 justify-center items-center">
+                    <div
+                      className="flex flex-col items-center justify-center m-4"
+                      onClick={() => handleRoleSelect("organizer")}
+                    >
+                      <img src="/Organizer.png" alt="" className="w-20 h-20" />
+                      <p className="text-center font-semibold mt-3">
+                        Organizer
+                      </p>
+                    </div>
+                    <div
+                      className="flex flex-col items-center justify-center m-4"
+                      onClick={() => handleRoleSelect("professional")}
+                    >
+                      <img
+                        src="/Professional.png"
+                        alt=""
+                        className="w-20 h-20"
+                      />
+                      <p className="text-center font-semibold mt-3">
+                        Professional
+                      </p>
+                    </div>
+                    <div
+                      className="flex flex-col items-center justify-center m-4"
+                      onClick={() => handleRoleSelect("participant")}
+                    >
+                      <img
+                        src="/Participant.png"
+                        alt=""
+                        className="w-20 h-20"
+                      />
+                      <p className="text-center font-semibold mt-3">
+                        Participant
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         <div className="flex items-center pt-4 space-x-1">
           <div className="flex-1 h-px sm:w-16 dark:bg-gray-700"></div>
           <p className="px-3 text-sm dark:text-gray-400">

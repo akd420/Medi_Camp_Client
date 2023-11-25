@@ -11,7 +11,6 @@ import { createContext, useEffect, useState } from "react";
 import auth from "../Firebase/FirebaseConfig";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { baseURL } from "../Hooks/useAxiosPublic";
 
 export const AuthContext = createContext(null);
 const googleProvider = new GoogleAuthProvider();
