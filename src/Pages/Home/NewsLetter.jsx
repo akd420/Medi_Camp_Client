@@ -8,8 +8,8 @@ const NewsLetter = () => {
   };
   return (
     <div className="my-16">
-      <div className="flex flex-col md:flex-row justify-center gap-10">
-        <div className="md:w-1/2">
+      <div className="flex flex-col md:flex-row justify-around gap-6">
+        <div className="md:w-1/2 flex items-center justify-center">
           <img src="/newsletter.png" alt="" />
         </div>
         <div className="md:w-1/2 my-auto">

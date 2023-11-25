@@ -11,14 +11,12 @@ const Login = () => {
   const { signInUser, googleLogin, user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [showRoleModal, setShowRoleModal] = useState(false);
-  const [selectedRole, setSelectedRole] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
   const toast = useToast();
   console.log(loading);
 
   const handleRoleSelect = async (role) => {
-    setSelectedRole(role);
     try {
       await postDataToDatabase({
         name: user?.displayName,
@@ -51,19 +49,6 @@ const Login = () => {
   };
 
   // Handle Google signInUser
-  // const handleGoogleSignInUser = async () => {
-  //   setLoading(true);
-  //   googleLogin()
-  //     .then(() => {
-  //       navigate(location?.state ? location.state : "/");
-  //       toast.success({content: "Login Successful"});
-  //       setLoading(false);
-  //     })
-  //     .catch((error) => {
-  //       toast.error({content: error.message});
-  //       setLoading(false);
-  //     });
-  // };
   const handleGoogleSignInUser = async () => {
     setLoading(true);
 
