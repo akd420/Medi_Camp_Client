@@ -11,13 +11,11 @@ const Register = () => {
   const { googleLogin, createUser } = useAuth();
   const [loading, setLoading] = useState(false);
   const [showRoleModal, setShowRoleModal] = useState(false);
-  const [selectedRole, setSelectedRole] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
   const toast = useToast();
   const { user } = useAuth();
   const handleRoleSelect = async (role) => {
-    setSelectedRole(role);
     try {
       await postDataToDatabase({
         name: user?.displayName,

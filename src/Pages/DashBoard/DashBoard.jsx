@@ -9,6 +9,7 @@ import {
   FaFileMedicalAlt,
   FaLaptopMedical,
 } from "react-icons/fa";
+import { Toaster } from "react-hot-toast";
 const DashBoard = () => {
   const { user, signOutUser } = useAuth();
   const toast = useToast();
@@ -189,7 +190,7 @@ const DashBoard = () => {
       <div className="drawer lg:drawer-open">
         <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
 
-        <div className="drawer-content flex flex-col items-center justify-center">
+        <div className="drawer-content">
           {/* Page content here */}
           <div className="min-h-[calc(100vh-256px)] lg:min-h-[calc(100vh-296px)]">
             <Outlet></Outlet>
@@ -208,6 +209,7 @@ const DashBoard = () => {
         </div>
       </div>
       <Footer></Footer>
+      <Toaster></Toaster>
     </div>
   );
 };
