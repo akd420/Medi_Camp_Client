@@ -32,7 +32,6 @@ const AvailableCamps = () => {
         return categoryMatch && searchMatch;
       });
 
-      // Sorting based on the selected sorting option
       if (sortBy === "mostRegistered") {
         results = results.sort((a, b) => b.participants - a.participants);
       } else if (sortBy === "alphabeticalOrder") {
@@ -42,6 +41,12 @@ const AvailableCamps = () => {
           })
         );
       }
+      else if(sortBy === "highPriced") {
+        results = results.sort((a, b) => a.fees - b.fees);
+      }
+        else if(sortBy === "lowPriced") {
+        results = results.sort((a, b) => b.fees - a.fees);
+        }
 
       setFilteredCards(results);
     }
@@ -111,6 +116,12 @@ const AvailableCamps = () => {
                     <option value="mostRegistered">Most Registered</option>
                     <option value="alphabeticalOrder">
                       Alphabetical Order
+                    </option>
+                    <option value="lowPriced">
+                      Price ( High &gt; Low)
+                    </option>
+                    <option value="highPriced">
+                      Price ( Low &gt; High)
                     </option>
                   </select>
                 </label>
