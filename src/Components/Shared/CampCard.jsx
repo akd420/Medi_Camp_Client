@@ -1,9 +1,10 @@
+import { Link } from "react-router-dom";
 import useAuth from "../../Hooks/useAuth";
 import CustomButton from "./CustomButton";
 
 /* eslint-disable react/prop-types */
 const CampCard = ({ camp, showJoin }) => {
-    const {campName,fees,imageURL,location,participants,professionals, services,targetAudience,time, description} = camp;
+    const {campName,fees,imageURL,location,participants,professionals, services,targetAudience,time, description,_id} = camp;
     const {userData}=useAuth();
     let role = null;
     if(userData){
@@ -51,7 +52,7 @@ const CampCard = ({ camp, showJoin }) => {
           <p><span className="font-medium">Participants:</span> {participants}</p>
           <p><span className="font-medium">Description:</span> {description.split(' ').slice(0, 25).join(' ')}...</p>
           <div className="card-actions">
-            <CustomButton>Details</CustomButton>
+            <Link to={`/camps/${_id}`}><CustomButton>Details</CustomButton></Link>
             {
                 showJoin && 
                     role === "participant" ? (

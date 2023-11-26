@@ -12,6 +12,7 @@ import OrganizerProfile from "../Pages/DashBoard/Pages/Profile/OrganizerProfile"
 import AddCamp from "../Pages/DashBoard/Pages/AddCamp";
 import ManageCamps from "../Pages/DashBoard/Pages/ManageCamps";
 import RegisteredCamps from "../Pages/DashBoard/Pages/RegisteredCamps";
+import CampDetails from "../Pages/DashBoard/Pages/CampDetails/CampDetails";
 
 const Router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ const Router = createBrowserRouter([
       {
         path: "/camps",
         element: <AvailableCamps></AvailableCamps>,
+      },
+      {
+        path: "/camps/:id",
+        element: <CampDetails></CampDetails>,
       },
       {
         path: "/contact",
@@ -65,7 +70,7 @@ const Router = createBrowserRouter([
       {
         path: "/dashboard/registered-camps",
         element: <RegisteredCamps></RegisteredCamps>,
-      }
+      },
     ],
   },
 ]);

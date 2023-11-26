@@ -34,13 +34,23 @@ const AvailableCamps = () => {
 
       if (sortBy === "mostRegistered") {
         results = results.sort((a, b) => b.participants - a.participants);
-      } else if (sortBy === "alphabeticalOrder") {
+      } else if (sortBy === "leastRegistered") {
+        results = results.sort((a, b) => a.participants - b.participants);
+      }    else if (sortBy === "aToZ") {
         results = results.sort((a, b) =>
           a.campName.localeCompare(b.campName, undefined, {
             sensitivity: "base",
           })
         );
+      } else if (sortBy === "zToA") {
+        results = results.sort((a, b) =>
+          b.campName.localeCompare(a.campName, undefined, {
+            sensitivity: "base",
+          })
+        );
       }
+
+
       else if(sortBy === "highPriced") {
         results = results.sort((a, b) => a.fees - b.fees);
       }
@@ -112,10 +122,14 @@ const AvailableCamps = () => {
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
                   >
-                    <option value="none">Sort by...</option>
+                    <option value="none">Default</option>
                     <option value="mostRegistered">Most Registered</option>
-                    <option value="alphabeticalOrder">
-                      Alphabetical Order
+                    <option value="leastRegistered">Least Registered</option>
+                    <option value="aToZ">
+                      A &gt; Z
+                    </option>
+                    <option value="zToA">
+                    Z &gt; A
                     </option>
                     <option value="lowPriced">
                       Price ( High &gt; Low)
