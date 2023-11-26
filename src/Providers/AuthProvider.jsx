@@ -44,29 +44,32 @@ const AuthProvider = ({ children }) => {
     return signOut(auth);
   };
 
-  const { data: camps, isLoading } = useQuery({
+  const {
+    data: camps,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["camps"],
     queryFn: async () => {
       const response = await axios.get(
         `${baseUrl}/camps?email=${user?.email}`,
-        { withCredentials: true}
+        { withCredentials: true }
       );
       return response.data;
     },
   });
-
-  
 
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser) => {
       const userEmail = currentUser?.email || user?.email;
       const loggedUser = { email: userEmail };
       setUser(currentUser);
-      if(user){
-        const response = axios.get(`${baseUrl}/users?email=${user?.email}`)
-      .then((res) => {
-        setUserData(res.data);
-      })
+      if (user) {
+        const response = axios
+          .get(`${baseUrl}/users?email=${user?.email}`)
+          .then((res) => {
+            setUserData(res.data);
+          });
       }
       setLoading(false);
       // if (currentUser) {
@@ -87,7 +90,7 @@ const AuthProvider = ({ children }) => {
       //     });
       // }
     });
-  },[user]);
+  }, [user]);
   const authenticate = {
     user,
     googleLogin,
@@ -97,7 +100,8 @@ const AuthProvider = ({ children }) => {
     loading,
     userData,
     camps,
-      isLoading,
+    isLoading,
+    refetch,
   };
 
   return (
