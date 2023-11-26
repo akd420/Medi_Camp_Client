@@ -8,8 +8,7 @@ import { Link } from "react-router-dom";
 
 const PopularCamps = () => {
   const { camps, isLoading } = useAuth();
-  const [sortBy, setSortBy] = useState("none");
-  // const displayCamp = camps.slice(0,6)
+  const [sortBy, setSortBy] = useState("mostRegistered");
   let results = [];
   if (camps) {
     if (sortBy === "mostRegistered") {
@@ -36,7 +35,6 @@ const PopularCamps = () => {
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
               >
-                <option value="none">Sort by...</option>
                 <option value="mostRegistered">Most Registered</option>
                 <option value="leastRegistered">Least Registered</option>
               </select>
