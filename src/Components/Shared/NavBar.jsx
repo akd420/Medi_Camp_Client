@@ -3,9 +3,12 @@ import useAuth from "../../Hooks/useAuth";
 import useToast from "./useToast";
 import { motion } from "framer-motion";
 const NavBar = () => {
-  const { user, signOutUser } = useAuth();
+  const { user, signOutUser, userData } = useAuth();
   const toast = useToast();
-
+  let role = null;
+  if(userData){
+    role = userData?.role;
+  }
   const logOut = () => {
     signOutUser()
       .then(() => {
@@ -46,7 +49,8 @@ const NavBar = () => {
           Available Camps
         </NavLink>
       </li>
-      <li>
+      {
+        role && <li>
         <NavLink
           className={({ isActive, isPending }) =>
             isPending
@@ -55,11 +59,12 @@ const NavBar = () => {
               ? "font-extrabold bg-rose text-white mr-1"
               : "mr-1"
           }
-          to={"/dashboard"}
+          to={`/dashboard/${role}-profile`}
         >
           Dashboard
         </NavLink>
       </li>
+      }
       <li>
         <NavLink
           className={({ isActive, isPending }) =>
@@ -144,7 +149,7 @@ const NavBar = () => {
                   <p className="text-xl md:hidden">{user?.displayName}</p>
                 </li>
                 <li>
-                  <a className="text-xl" onClick={logOut}>
+                  <a className="text-xl hover:text-rose" onClick={logOut}>
                     Logout
                   </a>
                 </li>

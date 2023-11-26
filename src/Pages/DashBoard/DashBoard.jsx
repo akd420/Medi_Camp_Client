@@ -9,10 +9,15 @@ import {
   FaFileMedicalAlt,
   FaLaptopMedical,
 } from "react-icons/fa";
+import { BiLogOutCircle } from "react-icons/bi";
 import { Toaster } from "react-hot-toast";
 const DashBoard = () => {
-  const { user, signOutUser } = useAuth();
+  const { user, signOutUser, userData } = useAuth();
   const toast = useToast();
+  let role = null;
+  if(userData){
+    role = userData?.role;
+  }
 
   const logOut = () => {
     signOutUser()
@@ -35,7 +40,7 @@ const DashBoard = () => {
               ? "font-extrabold bg-rose text-white mr-1"
               : "mr-1"
           }
-          to={"/dashboard/organizer-profile"}
+          to={`/dashboard/${role}-profile`}
         >
           <CgProfile></CgProfile>
           My Profile
@@ -94,6 +99,15 @@ const DashBoard = () => {
           <FaLaptopMedical></FaLaptopMedical>
           Registered Camps
         </NavLink>
+      </li>
+      <div>
+        <hr />
+      </div>
+      <li>
+        <a onClick={logOut}>
+          <BiLogOutCircle></BiLogOutCircle>
+          Logout
+        </a>
       </li>
     </>
   );
@@ -161,11 +175,6 @@ const DashBoard = () => {
                   <li>
                     <p className="text-xl md:hidden">{user?.displayName}</p>
                   </li>
-                  <li>
-                    <a className="text-xl" onClick={logOut}>
-                      Logout
-                    </a>
-                  </li>
                 </ul>
               </div>
             ) : (
@@ -196,7 +205,7 @@ const DashBoard = () => {
             <Outlet></Outlet>
           </div>
         </div>
-        <div className="drawer-side z-10">
+        <div className="drawer-side z-0">
           <label
             htmlFor="my-drawer-2"
             aria-label="close sidebar"

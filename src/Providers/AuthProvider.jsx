@@ -11,6 +11,7 @@ import { createContext, useEffect, useState } from "react";
 import auth from "../Firebase/FirebaseConfig";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { baseUrl } from "../Hooks/useAxios";
 
 export const AuthContext = createContext(null);
 const googleProvider = new GoogleAuthProvider();
@@ -18,7 +19,7 @@ const googleProvider = new GoogleAuthProvider();
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const [userData, setUserData] = useState(null);
   //google login
   const googleLogin = () => {
     setLoading(true);
@@ -43,22 +44,30 @@ const AuthProvider = ({ children }) => {
     return signOut(auth);
   };
 
-  // const { data: blogs, isLoading } = useQuery({
-  //   queryKey: ["blogs"],
-  //   queryFn: async () => {
-  //     const response = await axios.get(
-  //       `${baseURL}/blogs`,
-  //       { withCredentials: true}
-  //     );
-  //     return response.data;
-  //   },
-  // });
+  const { data: camps, isLoading } = useQuery({
+    queryKey: ["camps"],
+    queryFn: async () => {
+      const response = await axios.get(
+        `${baseUrl}/camps?email=${user?.email}`,
+        { withCredentials: true}
+      );
+      return response.data;
+    },
+  });
+
+  
 
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser) => {
       const userEmail = currentUser?.email || user?.email;
       const loggedUser = { email: userEmail };
       setUser(currentUser);
+      if(user){
+        const response = axios.get(`${baseUrl}/users?email=${user?.email}`)
+      .then((res) => {
+        setUserData(res.data);
+      })
+      }
       setLoading(false);
       // if (currentUser) {
       //   axios
@@ -78,8 +87,7 @@ const AuthProvider = ({ children }) => {
       //     });
       // }
     });
-  });
-
+  },[user]);
   const authenticate = {
     user,
     googleLogin,
@@ -87,7 +95,9 @@ const AuthProvider = ({ children }) => {
     signInUser,
     signOutUser,
     loading,
-    //   isLoading,
+    userData,
+    camps,
+      isLoading,
   };
 
   return (

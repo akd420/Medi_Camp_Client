@@ -81,7 +81,7 @@ const Login = () => {
   const checkUserExists = async (email) => {
     try {
       const response = await axiosSecure.get(`users?email=${email}`);
-      return response.data.length > 0;
+      return response.data;
     } catch (error) {
       console.error(error);
       throw new Error("Error checking user existence");
