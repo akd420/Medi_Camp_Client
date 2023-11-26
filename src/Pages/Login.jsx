@@ -14,7 +14,6 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const toast = useToast();
-  console.log(loading);
 
   const handleRoleSelect = async (role) => {
     try {
