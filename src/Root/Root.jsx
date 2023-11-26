@@ -23,7 +23,7 @@ const Root = () => {
         <Outlet></Outlet>
       </div>
       <Footer></Footer>
-      <Toaster position="center"></Toaster>
+      <Toaster></Toaster>
     </div>
   );
 };

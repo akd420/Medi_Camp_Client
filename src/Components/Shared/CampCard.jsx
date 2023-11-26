@@ -4,6 +4,7 @@ import CustomButton from "./CustomButton";
 
 /* eslint-disable react/prop-types */
 const CampCard = ({ camp, showJoin }) => {
+    const {user} =useAuth();
     const {campName,fees,imageURL,location,participants,professionals, services,targetAudience,time, description,_id} = camp;
     const {userData}=useAuth();
     let role = null;
@@ -34,14 +35,18 @@ const CampCard = ({ camp, showJoin }) => {
   }
   return (
     <div>
-      <div className="card card-compact bg-base-100 shadow-xl">
-        <figure>
+      <div className="card card-compact bg-base-100">
+       <Link to={`/camps/${_id}`}>
+       <figure>
           <img
+            className="rounded-t-lg md:h-96 w-full md:object-cover"
             src={imageURL}
             alt="Shoes"
           />
         </figure>
-        <div className="card-body">
+       </Link>
+        <div className="card-body flex flex-col">
+          <Link to={`/camps/${_id}`}>
           <h2 className="card-title">{campName}</h2>
           <p><span className="font-medium">Time:</span> {formattedTime}</p>
           <p><span className="font-medium">Location:</span> {location}</p>
@@ -50,11 +55,11 @@ const CampCard = ({ camp, showJoin }) => {
           <p><span className="font-medium">For:</span> {cat}</p>
           <p><span className="font-medium">Fees:</span> ${fees}</p>
           <p><span className="font-medium">Participants:</span> {participants}</p>
-          <p><span className="font-medium">Description:</span> {description.split(' ').slice(0, 25).join(' ')}...</p>
-          <div className="card-actions">
+          <p><span className="font-medium">Description:</span> {description.split(' ').slice(0, 25).join(' ')}...</p></Link>
+          <div className="card-actions flex-grow">
             <Link to={`/camps/${_id}`}><CustomButton>Details</CustomButton></Link>
             {
-                showJoin && 
+               user && showJoin && 
                     role === "participant" ? (
                         <CustomButton>Join</CustomButton>
                     ) : (
