@@ -192,7 +192,7 @@ const CampDetailsCard = ({ camp }) => {
                     name="email"
                     defaultValue={userData?.email}
                     readOnly
-                    placeholder="Blog Title"
+                    placeholder="Enter Your Email"
                     className="input input-bordered w-full"
                     required
                   />

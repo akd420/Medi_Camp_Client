@@ -5,8 +5,11 @@ import CustomButton from "./CustomButton";
 import Heading from "./Heading";
 import { axiosSecure } from "../../Hooks/useAxios";
 import useToast from "./useToast";
+import userLogo from "../../assets/user.png";
+import { updateProfile } from "firebase/auth";
 const ProfileCard = ({ userData, refetch }) => {
   const { user } = useAuth();
+  const photo = user?.photoURL || userLogo
   const toast = useToast();
   let roles = userData.role;
   if (roles === "organizer") {
@@ -20,6 +23,7 @@ const ProfileCard = ({ userData, refetch }) => {
     e.preventDefault();
     const form = e.target;
     const name = form.name.value;
+    const image = form.image.value;
     const age = form.age.value;
     const gender = form.gender.value;
     const phone = form.phone.value;
@@ -33,6 +37,9 @@ const ProfileCard = ({ userData, refetch }) => {
     };
     axiosSecure.put(`/users/${userData._id}`,submit)
     .then((res)=>{
+      updateProfile(user, {
+        photoURL: image,
+      })
       console.log(res);
       if (res.status === 200) {
         document.getElementById(`modal_${userData._id}`).close(true)
@@ -49,7 +56,7 @@ const ProfileCard = ({ userData, refetch }) => {
         <div className="h-56 w-72 absolute flex justify-center items-center">
           <img
             className="object-cover h-20 w-20 rounded-full"
-            src={user?.photoURL}
+            src={photo}
             alt=""
           />
         </div>
@@ -143,9 +150,23 @@ const ProfileCard = ({ userData, refetch }) => {
                   name="email"
                   defaultValue={userData?.email}
                   readOnly
-                  placeholder="Blog Title"
+                  placeholder="Enter Your Email"
                   className="input input-bordered w-full"
                   required
+                />
+              </label>
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Photo Url</span>
+              </label>
+              <label className="input-group">
+                <input
+                  type="text"
+                  name="image"
+                  defaultValue={user?.photoURL}
+                  placeholder="Photo URL"
+                  className="input input-bordered w-full"
                 />
               </label>
             </div>
