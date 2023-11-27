@@ -211,8 +211,8 @@ const DashBoard = () => {
           <ul className="menu p-4 w-52 min-h-full bg-base-200 text-base-content">
             {/* Sidebar content here */}
             <div className="text-center mt-5">
-              <h1>{userData.name}</h1>
-              <h1>{userData.email}</h1>
+              <h1>{userData?.name}</h1>
+              <h1>{userData?.email}</h1>
             </div>
             <div className="md:mt-20 mt-32">{navLinks}</div>
           </ul>
