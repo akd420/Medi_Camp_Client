@@ -5,7 +5,7 @@ import { axiosSecure } from "../../../../Hooks/useAxios";
 
 /* eslint-disable react/prop-types */
 const CampDetailsCard = ({ camp }) => {
-  const { userData, user } = useAuth();
+  const { userData, user, refetch } = useAuth();
   const toast = useToast();
   let role = null;
   if (userData) {
@@ -17,6 +17,7 @@ const CampDetailsCard = ({ camp }) => {
     imageURL,
     location,
     professionals,
+    participants,
     services,
     targetAudience,
     time,
@@ -78,7 +79,16 @@ const CampDetailsCard = ({ camp }) => {
         console.log(res.data);
         if (res.status == 200) {
           toast.success({ content: "Camp Joined Successfully" });
+          axiosSecure
+            .put(`/camps/${_id}`, { participants: participants + 1 })
+            .then((res) => {
+              console.log(res.data);
+            });
         }
+      })
+      .then(() => {
+        console.log("refetching");
+        refetch();
       })
       .catch((error) => {
         if (error.response && error.response.status === 409) {

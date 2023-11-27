@@ -132,10 +132,10 @@ const AvailableCamps = () => {
                     Z &gt; A
                     </option>
                     <option value="lowPriced">
-                      Price ( High &gt; Low)
+                      Fees ( High &gt; Low)
                     </option>
                     <option value="highPriced">
-                      Price ( Low &gt; High)
+                      Fees ( Low &gt; High)
                     </option>
                   </select>
                 </label>

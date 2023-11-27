@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
-const CustomButton = ({ children }) => {
+const CustomButton = ({ children,onClick }) => {
   return (
-    <motion.button
+    <motion.button onClick={onClick}
       whileHover={{
         scale: 1.2,
         transition: { duration: 0.1 },
