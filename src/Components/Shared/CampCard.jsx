@@ -6,7 +6,7 @@ import { axiosSecure } from "../../Hooks/useAxios";
 import Heading from "./Heading";
 
 /* eslint-disable react/prop-types */
-const CampCard = ({ camp, showJoin }) => {
+const CampCard = ({ camp, showJoin, dashboard }) => {
   const { user, userData, refetch } = useAuth();
   const {
     campName,
@@ -80,18 +80,19 @@ const CampCard = ({ camp, showJoin }) => {
       .then((res) => {
         console.log(res.data);
         if (res.status == 200) {
-          document.getElementById(`modal_${_id}`).close(true)
+          document.getElementById(`modal_${_id}`).close(true);
           toast.success({ content: "Camp Joined Successfully" });
-          axiosSecure.put(`/camps/${_id}`, { participants: participants + 1 })
-          .then((res) => {
-            console.log(res.data);
-            refetch();
-          })
+          axiosSecure
+            .put(`/camps/${_id}`, { participants: participants + 1 })
+            .then((res) => {
+              console.log(res.data);
+              refetch();
+            });
         }
       })
       .catch((error) => {
         if (error.response && error.response.status === 409) {
-          document.getElementById(`modal_${_id}`).close(true)
+          document.getElementById(`modal_${_id}`).close(true);
           toast.error({ content: "You have already joined this camp" });
         } else {
           toast.error({ content: error.message });
@@ -113,32 +114,39 @@ const CampCard = ({ camp, showJoin }) => {
         <div className="card-body flex flex-col">
           <Link to={`/camps/${_id}`}>
             <h2 className="card-title">{campName}</h2>
-            <p>
-              <span className="font-medium">Time:</span> {formattedTime}
-            </p>
-            <p>
-              <span className="font-medium">Location:</span> {location}
-            </p>
-            <p>
-              <span className="font-medium">Services:</span> {services}
-            </p>
-            <p>
-              <span className="font-medium">Professionals in Attendance:</span>{" "}
-              {professionals}
-            </p>
-            <p>
-              <span className="font-medium">For:</span> {cat}
-            </p>
-            <p>
-              <span className="font-medium">Fees:</span> ${fees}
-            </p>
-            <p>
-              <span className="font-medium">Participants:</span> {participants}
-            </p>
-            <p>
-              <span className="font-medium">Description:</span>{" "}
-              {description.split(" ").slice(0, 25).join(" ")}...
-            </p>
+            {!dashboard && (
+              <div>
+                <p>
+                  <span className="font-medium">Time:</span> {formattedTime}
+                </p>
+                <p>
+                  <span className="font-medium">Location:</span> {location}
+                </p>
+                <p>
+                  <span className="font-medium">Services:</span> {services}
+                </p>
+                <p>
+                  <span className="font-medium">
+                    Professionals in Attendance:
+                  </span>{" "}
+                  {professionals}
+                </p>
+                <p>
+                  <span className="font-medium">For:</span> {cat}
+                </p>
+                <p>
+                  <span className="font-medium">Fees:</span> ${fees}
+                </p>
+                <p>
+                  <span className="font-medium">Participants:</span>{" "}
+                  {participants}
+                </p>
+                <p>
+                  <span className="font-medium">Description:</span>{" "}
+                  {description.split(" ").slice(0, 25).join(" ")}...
+                </p>
+              </div>
+            )}
           </Link>
           <div className="card-actions flex-grow">
             <Link to={`/camps/${_id}`}>
@@ -160,11 +168,14 @@ const CampCard = ({ camp, showJoin }) => {
       </div>
       {/* modal section */}
       <div>
-        <dialog id={`modal_${_id}`} className="modal z-[200] modal-bottom sm:modal-middle">
+        <dialog
+          id={`modal_${_id}`}
+          className="modal z-[200] modal-bottom sm:modal-middle"
+        >
           <div className="modal-box">
-          <div className="my-4">
-          <Heading main={'Join'} sub={'Camp'}></Heading>
-          </div>
+            <div className="my-4">
+              <Heading main={"Join"} sub={"Camp"}></Heading>
+            </div>
             <form action="" onSubmit={handleSubmit}>
               <div className="form-control">
                 <label className="label">

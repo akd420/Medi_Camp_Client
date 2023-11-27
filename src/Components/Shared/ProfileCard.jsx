@@ -7,6 +7,7 @@ import { axiosSecure } from "../../Hooks/useAxios";
 import useToast from "./useToast";
 import userLogo from "../../assets/user.png";
 import { updateProfile } from "firebase/auth";
+import OrganizerImpact from "../organizerImpact";
 const ProfileCard = ({ userData, refetch }) => {
   const { user } = useAuth();
   const photo = user?.photoURL || userLogo
@@ -52,7 +53,8 @@ const ProfileCard = ({ userData, refetch }) => {
 
   return (
     <div>
-      <div className="h-screen w-full mt-12 bg-gray-50 flex justify-center ">
+      {/* profile card section */}
+      <div className="w-full mt-12 flex justify-center ">
         <div className="h-56 w-72 absolute flex justify-center items-center">
           <img
             className="object-cover h-20 w-20 rounded-full"
@@ -118,6 +120,14 @@ const ProfileCard = ({ userData, refetch }) => {
           </div>
         </div>
       </div>
+      {/* organizer's impact section  */}
+      {
+        userData.role === "organizer" ? (
+          <div className="mt-52">
+            <OrganizerImpact></OrganizerImpact>
+          </div>
+        ) : ""
+      }
       {/* update modal section */}
       <dialog id={`modal_${userData._id}`} className="modal">
         <div className="modal-box">

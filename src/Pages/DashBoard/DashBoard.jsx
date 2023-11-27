@@ -15,7 +15,7 @@ const DashBoard = () => {
   const { user, signOutUser, userData } = useAuth();
   const toast = useToast();
   let role = null;
-  if(userData){
+  if (userData) {
     role = userData?.role;
   }
 
@@ -40,7 +40,7 @@ const DashBoard = () => {
               ? "font-extrabold bg-rose text-white mr-1"
               : "mr-1"
           }
-          to={`/dashboard/${role}-profile`}
+          to={`/dashboard/profile`}
         >
           <CgProfile></CgProfile>
           My Profile
@@ -67,24 +67,28 @@ const DashBoard = () => {
       <div>
         <hr />
       </div>
-      <li>
-        <NavLink
-          className={({ isActive, isPending }) =>
-            isPending
-              ? "pending"
-              : isActive
-              ? "font-extrabold bg-rose text-white mr-1"
-              : "mr-1"
-          }
-          to={"/dashboard/manage-camps"}
-        >
-          <FaFileMedicalAlt></FaFileMedicalAlt>
-          Manage Camps
-        </NavLink>
-      </li>
-      <div>
-        <hr />
-      </div>
+      {role === "organizer" && (
+        <div>
+          <li>
+            <NavLink
+              className={({ isActive, isPending }) =>
+                isPending
+                  ? "pending"
+                  : isActive
+                  ? "font-extrabold bg-rose text-white mr-1"
+                  : "mr-1"
+              }
+              to={"/dashboard/manage-camps"}
+            >
+              <FaFileMedicalAlt></FaFileMedicalAlt>
+              Manage Camps
+            </NavLink>
+          </li>
+          <div>
+            <hr />
+          </div>
+        </div>
+      )}
       <li>
         <NavLink
           className={({ isActive, isPending }) =>
@@ -168,14 +172,6 @@ const DashBoard = () => {
                     )}
                   </div>
                 </label>
-                <ul
-                  tabIndex={0}
-                  className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box"
-                >
-                  <li>
-                    <p className="text-xl md:hidden">{user?.displayName}</p>
-                  </li>
-                </ul>
               </div>
             ) : (
               <div className="flex flex-col md:flex-row text-center items-center">
@@ -211,8 +207,13 @@ const DashBoard = () => {
             aria-label="close sidebar"
             className="drawer-overlay"
           ></label>
+
           <ul className="menu p-4 w-52 min-h-full bg-base-200 text-base-content">
             {/* Sidebar content here */}
+            <div className="text-center mt-5">
+              <h1>{userData.name}</h1>
+              <h1>{userData.email}</h1>
+            </div>
             <div className="md:mt-20 mt-32">{navLinks}</div>
           </ul>
         </div>
