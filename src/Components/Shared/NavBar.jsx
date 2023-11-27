@@ -59,7 +59,7 @@ const NavBar = () => {
               ? "font-extrabold bg-rose text-white mr-1"
               : "mr-1"
           }
-          to={`/dashboard/${role}-profile`}
+          to={`/dashboard/profile`}
         >
           Dashboard
         </NavLink>

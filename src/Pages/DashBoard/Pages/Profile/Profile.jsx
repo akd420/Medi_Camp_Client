@@ -1,18 +1,19 @@
 import CustomContainer from "../../../../Components/Shared/CustomContainer";
+import Loader from "../../../../Components/Shared/Loader";
 import Loading from "../../../../Components/Shared/Loading";
 import ProfileCard from "../../../../Components/Shared/ProfileCard";
 import useAuth from "../../../../Hooks/useAuth";
 
-const OrganizerProfile = () => {
-  const { userData } = useAuth();
-  console.log(userData);
+const Profile = () => {
+  const {user} = useAuth();
+  const {isLoading, data:userData, refetch} = Loader(`users?email=${user?.email}`, "userData");
   return (
     <div>
-      {!userData ? (
+      { isLoading ? (
         <Loading></Loading>
       ) : (
         <CustomContainer>
-          <ProfileCard userData={userData}></ProfileCard>
+          <ProfileCard userData={userData} refetch={refetch}></ProfileCard>
         </CustomContainer>
         
       )}
@@ -20,4 +21,4 @@ const OrganizerProfile = () => {
   );
 };
 
-export default OrganizerProfile;
+export default Profile;

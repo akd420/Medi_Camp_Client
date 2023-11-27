@@ -8,11 +8,11 @@ import AvailableCamps from "../Pages/AvailableCamps/AvailableCamps";
 import ContactUs from "../Pages/ContactUs/ContactUs";
 import NotFound from "../Pages/NotFound";
 import PrivateRoute from "./PrivateRoute";
-import OrganizerProfile from "../Pages/DashBoard/Pages/Profile/OrganizerProfile";
 import AddCamp from "../Pages/DashBoard/Pages/AddCamp";
 import ManageCamps from "../Pages/DashBoard/Pages/ManageCamps";
 import RegisteredCamps from "../Pages/DashBoard/Pages/RegisteredCamps";
 import CampDetails from "../Pages/DashBoard/Pages/CampDetails/CampDetails";
+import Profile from "../Pages/DashBoard/Pages/Profile/Profile";
 
 const Router = createBrowserRouter([
   {
@@ -56,8 +56,8 @@ const Router = createBrowserRouter([
     errorElement: <NotFound></NotFound>,
     children: [
       {
-        path: "/dashboard/organizer-profile",
-        element: <OrganizerProfile></OrganizerProfile>,
+        path: "/dashboard/profile",
+        element: <Profile></Profile>
       },
       {
         path: "/dashboard/add-camp",

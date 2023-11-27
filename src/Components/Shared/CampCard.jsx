@@ -3,6 +3,7 @@ import useAuth from "../../Hooks/useAuth";
 import CustomButton from "./CustomButton";
 import useToast from "./useToast";
 import { axiosSecure } from "../../Hooks/useAxios";
+import Heading from "./Heading";
 
 /* eslint-disable react/prop-types */
 const CampCard = ({ camp, showJoin }) => {
@@ -79,6 +80,7 @@ const CampCard = ({ camp, showJoin }) => {
       .then((res) => {
         console.log(res.data);
         if (res.status == 200) {
+          document.getElementById(`modal_${_id}`).close(true)
           toast.success({ content: "Camp Joined Successfully" });
           axiosSecure.put(`/camps/${_id}`, { participants: participants + 1 })
           .then((res) => {
@@ -89,6 +91,7 @@ const CampCard = ({ camp, showJoin }) => {
       })
       .catch((error) => {
         if (error.response && error.response.status === 409) {
+          document.getElementById(`modal_${_id}`).close(true)
           toast.error({ content: "You have already joined this camp" });
         } else {
           toast.error({ content: error.message });
@@ -157,8 +160,11 @@ const CampCard = ({ camp, showJoin }) => {
       </div>
       {/* modal section */}
       <div>
-        <dialog id={`modal_${_id}`} className="modal modal-bottom sm:modal-middle">
+        <dialog id={`modal_${_id}`} className="modal z-[200] modal-bottom sm:modal-middle">
           <div className="modal-box">
+          <div className="my-4">
+          <Heading main={'Join'} sub={'Camp'}></Heading>
+          </div>
             <form action="" onSubmit={handleSubmit}>
               <div className="form-control">
                 <label className="label">
@@ -168,7 +174,7 @@ const CampCard = ({ camp, showJoin }) => {
                   <input
                     type="text"
                     name="name"
-                    defaultValue={user?.displayName}
+                    defaultValue={userData?.name}
                     placeholder="Your Name"
                     className="input input-bordered w-full"
                     required
@@ -183,7 +189,7 @@ const CampCard = ({ camp, showJoin }) => {
                   <input
                     type="email"
                     name="email"
-                    defaultValue={user?.email}
+                    defaultValue={userData?.email}
                     readOnly
                     placeholder="Blog Title"
                     className="input input-bordered w-full"
@@ -200,6 +206,7 @@ const CampCard = ({ camp, showJoin }) => {
                     <input
                       type="number"
                       name="age"
+                      defaultValue={userData?.age}
                       placeholder="Your Age"
                       className="input input-bordered w-full"
                       required
@@ -214,7 +221,7 @@ const CampCard = ({ camp, showJoin }) => {
                     <select
                       name="gender"
                       className="select select-bordered w-full"
-                      defaultValue=""
+                      defaultValue={userData?.gender}
                       required
                     >
                       <option disabled value="">
@@ -252,6 +259,7 @@ const CampCard = ({ camp, showJoin }) => {
                     <input
                       type="text"
                       name="phone"
+                      defaultValue={userData?.phone}
                       placeholder="Your Phone Number"
                       className="input input-bordered w-full"
                       required
@@ -267,6 +275,7 @@ const CampCard = ({ camp, showJoin }) => {
                   <input
                     type="text"
                     name="address"
+                    defaultValue={userData?.address}
                     placeholder="Enter Your Address"
                     className="input input-bordered w-full"
                     required

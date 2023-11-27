@@ -1,4 +1,5 @@
 import CustomButton from "../../../../Components/Shared/CustomButton";
+import Heading from "../../../../Components/Shared/Heading";
 import useToast from "../../../../Components/Shared/useToast";
 import useAuth from "../../../../Hooks/useAuth";
 import { axiosSecure } from "../../../../Hooks/useAxios";
@@ -78,6 +79,7 @@ const CampDetailsCard = ({ camp }) => {
       .then((res) => {
         console.log(res.data);
         if (res.status == 200) {
+          document.getElementById("my_modal_2").close(true)
           toast.success({ content: "Camp Joined Successfully" });
           axiosSecure
             .put(`/camps/${_id}`, { participants: participants + 1 })
@@ -92,6 +94,7 @@ const CampDetailsCard = ({ camp }) => {
       })
       .catch((error) => {
         if (error.response && error.response.status === 409) {
+          document.getElementById("my_modal_2").close(true)
           toast.error({ content: "You have already joined this camp" });
         } else {
           toast.error({ content: error.message });
@@ -160,6 +163,9 @@ const CampDetailsCard = ({ camp }) => {
       <div>
         <dialog id="my_modal_2" className="modal modal-bottom sm:modal-middle">
           <div className="modal-box">
+          <div className="my-4">
+          <Heading main={'Join'} sub={'Camp'}></Heading>
+          </div>
             <form action="" onSubmit={handleSubmit}>
               <div className="form-control">
                 <label className="label">
@@ -169,7 +175,7 @@ const CampDetailsCard = ({ camp }) => {
                   <input
                     type="text"
                     name="name"
-                    defaultValue={user?.displayName}
+                    defaultValue={userData?.name}
                     placeholder="Your Name"
                     className="input input-bordered w-full"
                     required
@@ -184,7 +190,7 @@ const CampDetailsCard = ({ camp }) => {
                   <input
                     type="email"
                     name="email"
-                    defaultValue={user?.email}
+                    defaultValue={userData?.email}
                     readOnly
                     placeholder="Blog Title"
                     className="input input-bordered w-full"
@@ -201,6 +207,7 @@ const CampDetailsCard = ({ camp }) => {
                     <input
                       type="number"
                       name="age"
+                      defaultValue={userData?.age}
                       placeholder="Your Age"
                       className="input input-bordered w-full"
                       required
@@ -215,7 +222,7 @@ const CampDetailsCard = ({ camp }) => {
                     <select
                       name="gender"
                       className="select select-bordered w-full"
-                      defaultValue=""
+                      defaultValue={userData?.gender}
                       required
                     >
                       <option disabled value="">
@@ -253,6 +260,7 @@ const CampDetailsCard = ({ camp }) => {
                     <input
                       type="text"
                       name="phone"
+                      defaultValue={userData?.phone}
                       placeholder="Your Phone Number"
                       className="input input-bordered w-full"
                       required
@@ -268,6 +276,7 @@ const CampDetailsCard = ({ camp }) => {
                   <input
                     type="text"
                     name="address"
+                    defaultValue={userData?.address}
                     placeholder="Enter Your Address"
                     className="input input-bordered w-full"
                     required

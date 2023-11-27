@@ -2,8 +2,12 @@
 import useAuth from "../../Hooks/useAuth";
 import { FaRegEdit } from "react-icons/fa";
 import CustomButton from "./CustomButton";
-const ProfileCard = ({ userData }) => {
+import Heading from "./Heading";
+import { axiosSecure } from "../../Hooks/useAxios";
+import useToast from "./useToast";
+const ProfileCard = ({ userData, refetch }) => {
   const { user } = useAuth();
+  const toast = useToast();
   let roles = userData.role;
   if (roles === "organizer") {
     roles = "Organizer";
@@ -12,60 +16,35 @@ const ProfileCard = ({ userData }) => {
   } else if (roles === "professionals") {
     roles = "Healthcare Professionals";
   }
-  const handleEdit = () => {
-    console.log("Edit");
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const name = form.name.value;
+    const age = form.age.value;
+    const gender = form.gender.value;
+    const phone = form.phone.value;
+    const address = form.address.value;
+    const submit = {
+      name,
+      age,
+      gender,
+      phone,
+      address,
+    };
+    axiosSecure.put(`/users/${userData._id}`,submit)
+    .then((res)=>{
+      console.log(res);
+      if (res.status === 200) {
+        document.getElementById(`modal_${userData._id}`).close(true)
+        toast.success({ content: "Profile Updated Successfully" });
+        refetch();
+      }
+    })
   };
+ 
 
   return (
     <div>
-      {/* <div className="flex items-center justify-center mt-12">
-        <div className="relative w-full group max-w-md min-w-0 mx-auto mt-6 mb-6 break-words bg-rose border shadow-2xl md:max-w-sm rounded-xl">
-          <div className="pb-6">
-            <div className="flex flex-wrap justify-center">
-              <div className="flex justify-center w-full">
-                <div className="relative">
-                  <img
-                    alt="Profile"
-                    src={user?.photoURL}
-                    className="dark:shadow-xl border-white dark:border-gray-800 rounded-full align-middle border-8 absolute -m-16 -ml-18 lg:-ml-16 max-w-[150px]"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="mt-20 text-center">
-              <h3 className="mb-1 text-2xl font-bold leading-normal">
-                {userData?.name}
-              </h3>
-              <h3 className="mb-1 text-2xl font-bold leading-normal">
-                Role: {roles}
-              </h3>
-              <div className="flex flex-row justify-center w-full mx-auto space-x-2 text-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-4 h-4 text-gray-400"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
-                <div className=" font-bold tracking-wide text-gray-600 dark:text-gray-300 font-mono text-xl">
-                  Address: {userData.address ? userData.address : "N/A"}
-                </div>
-              </div>
-              <div className=" font-bold tracking-wide text-gray-600 dark:text-gray-300 font-mono text-xl">
-                Age: {userData.age ? userData.address : "N/A"}
-              </div>
-              <div className="w-full text-center">
-                <div className="flex justify-center pt-8 pb-0 lg:pt-4"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */}
       <div className="h-screen w-full mt-12 bg-gray-50 flex justify-center ">
         <div className="h-56 w-72 absolute flex justify-center items-center">
           <img
@@ -115,16 +94,137 @@ const ProfileCard = ({ userData }) => {
               <h1 className="text-gray-700 text-sm">
                 Age: {userData.age ? userData.age : "N/A"}
               </h1>
-              <div onClick={handleEdit}>
+              <h1 className="text-gray-700 text-sm">
+                Gender: {userData.gender ? userData.gender.toUpperCase() : "N/A"}
+              </h1>
+              <div
+                onClick={() =>
+                  document.getElementById(`modal_${userData._id}`).showModal()
+                }
+              >
                 <CustomButton>
-                <FaRegEdit></FaRegEdit>
-                    Update
-                    </CustomButton>
+                  <FaRegEdit></FaRegEdit>
+                  Update
+                </CustomButton>
               </div>
             </div>
           </div>
         </div>
       </div>
+      {/* update modal section */}
+      <dialog id={`modal_${userData._id}`} className="modal">
+        <div className="modal-box">
+          <div className="my-4">
+            <Heading main={"Update"} sub={"Profile"}></Heading>
+          </div>
+          <form action="" onSubmit={handleSubmit}>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Your Name</span>
+              </label>
+              <label className="input-group">
+                <input
+                  type="text"
+                  name="name"
+                  defaultValue={userData?.name}
+                  placeholder="Your Name"
+                  className="input input-bordered w-full"
+                  required
+                />
+              </label>
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Your Email</span>
+              </label>
+              <label className="input-group">
+                <input
+                  type="email"
+                  name="email"
+                  defaultValue={userData?.email}
+                  readOnly
+                  placeholder="Blog Title"
+                  className="input input-bordered w-full"
+                  required
+                />
+              </label>
+            </div>
+            <div className="flex gap-2">
+              <div className="form-control flex-1">
+                <label className="label">
+                  <span className="label-text">Your Age</span>
+                </label>
+                <label className="input-group">
+                  <input
+                    type="number"
+                    defaultValue={userData?.age}
+                    name="age"
+                    placeholder="Your Age"
+                    className="input input-bordered w-full"
+                  />
+                </label>
+              </div>
+              <div className="form-control flex-1">
+                <label className="label">
+                  <span className="label-text">Gender</span>
+                </label>
+                <label className="input-group">
+                  <select
+                    name="gender"
+                    className="select select-bordered w-full"
+                    defaultValue={ userData?.gender ? userData?.gender : ''}
+                  >
+                    <option disabled value="">
+                      Select Your Gender. . .
+                    </option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="others">Others</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <div className="form-control w-full">
+                <label className="label">
+                  <span className="label-text">Your Phone Number</span>
+                </label>
+                <label className="input-group">
+                  <input
+                    type="text"
+                    name="phone"
+                    defaultValue={userData?.phone}
+                    placeholder="Your Phone Number"
+                    className="input input-bordered w-full"
+                  />
+                </label>
+              </div>
+            </div>
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text">Your Address</span>
+              </label>
+              <label className="input-group">
+                <input
+                  type="text"
+                  name="address"
+                  defaultValue={userData?.address}
+                  placeholder="Enter Your Address"
+                  className="input input-bordered w-full"
+                />
+              </label>
+            </div>
+            <div className="flex justify-center mt-10">
+              <CustomButton>
+                <input type="submit" value="Submit" />
+              </CustomButton>
+            </div>
+          </form>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
     </div>
   );
 };
