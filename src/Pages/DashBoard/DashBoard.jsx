@@ -49,26 +49,28 @@ const DashBoard = () => {
       <div>
         <hr />
       </div>
-      <li>
-        <NavLink
-          className={({ isActive, isPending }) =>
-            isPending
-              ? "pending"
-              : isActive
-              ? "font-extrabold bg-rose text-white mr-1"
-              : "mr-1"
-          }
-          to={"/dashboard/add-camp"}
-        >
-          <FaClinicMedical></FaClinicMedical>
-          Add Camps
-        </NavLink>
-      </li>
-      <div>
-        <hr />
-      </div>
       {role === "organizer" && (
         <div>
+          <div>
+            <li>
+              <NavLink
+                className={({ isActive, isPending }) =>
+                  isPending
+                    ? "pending"
+                    : isActive
+                    ? "font-extrabold bg-rose text-white mr-1"
+                    : "mr-1"
+                }
+                to={"/dashboard/add-camp"}
+              >
+                <FaClinicMedical></FaClinicMedical>
+                Add Camps
+              </NavLink>
+            </li>
+            <div>
+              <hr />
+            </div>
+          </div>
           <li>
             <NavLink
               className={({ isActive, isPending }) =>

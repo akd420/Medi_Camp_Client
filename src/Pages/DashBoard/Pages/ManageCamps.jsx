@@ -1,11 +1,13 @@
 /* eslint-disable react/prop-types */
-import React, { useMemo, useCallback, useState } from "react";
+import { useMemo, useCallback, useState } from "react";
 import { useTable } from "react-table";
 import useAuth from "../../../Hooks/useAuth";
 import CustomContainer from "../../../Components/Shared/CustomContainer";
 import Heading from "../../../Components/Shared/Heading";
 import Loading from "../../../Components/Shared/Loading";
 import UpdateModal from "../../../Components/UpdateModal";
+import toast from "react-hot-toast";
+import ConfirmToast from "../../../Components/Shared/ConfirmToast";
 
 const ManageCamps = () => {
   const { user, camps, isLoading } = useAuth();
@@ -92,13 +94,28 @@ const ManageCamps = () => {
   // Function to handle update button click
   const handleUpdate = (rowData) => {
     setSelectedRowData(rowData);
-    console.log("Update clicked for row with data:");
   };
 
   // Function to handle delete button click
   const handleDelete = (campId) => {
-    // Implement your delete logic here
-    console.log("Delete clicked for camp with ID:", campId);
+    // setSelectedRowId(campId);
+    // toast tryout
+    const confirmToastId = ConfirmToast({
+      message: "Are you sure you want to delete this camp?",
+      confirmLabel: "Delete",
+      cancelLabel: "Cancel",
+      onConfirm: () => handleDeleteConfirmed(campId),
+      onCancel: () => toast.dismiss(confirmToastId),
+    });
+    // toast(confirmToast, { campId });
+  };
+
+  // Function to handle delete confirmation
+  const handleDeleteConfirmed = (campId) => {
+    // Your logic to delete the camp goes here
+    console.log("Deleting camp with ID:", campId);
+    // Show a success toast
+    toast.success("Camp deleted successfully!");
   };
 
   return (
@@ -111,7 +128,7 @@ const ManageCamps = () => {
             <div className="my-12">
               <Heading main={"Manage Your"} sub={"Camps"}></Heading>
               <div className="overflow-x-auto">
-                <table {...getTableProps()} className="table">
+                <table {...getTableProps()} className="table mt-10">
                   <thead>
                     {headerGroups.map((headerGroup, idx) => (
                       <tr key={idx} {...headerGroup.getHeaderGroupProps()}>
@@ -147,6 +164,7 @@ const ManageCamps = () => {
                   open={true}
                 ></UpdateModal>
               )}
+              {/* Conditionally render DeleteModal */}
             </div>
           ) : (
             <Heading main={"No Camps"} sub={"Yet"}></Heading>

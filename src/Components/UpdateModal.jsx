@@ -9,7 +9,7 @@ import useToast from "./Shared/useToast";
 import useAuth from "../Hooks/useAuth";
 
 const UpdateModal = ({ rowData, open, setSelectedRowData }) => {
-  const { user, refetch } = useAuth();
+  const { refetch } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const toast = useToast();
   
@@ -30,10 +30,11 @@ const UpdateModal = ({ rowData, open, setSelectedRowData }) => {
 
   const onSubmit = (data) => {
     console.log("Form data submitted:", data);
-    axiosSecure.put(`/camps/${rowData.id}`, data).then((res) => {
+    axiosSecure.put(`/camp/${rowData.id}`, data).then((res) => {
       console.log(res);
       if (res.status === 200) {
         refetch();
+        closeModal();
         toast.success({ content: "Camp Updated Successfully" });
       }
     })
@@ -354,7 +355,7 @@ const UpdateModal = ({ rowData, open, setSelectedRowData }) => {
               </div>
             </div>
             <button type="submit" className="w-full bg-rose text-white btn">
-              Add Camp
+              Update Camp
             </button>
           </form>
         </div>
