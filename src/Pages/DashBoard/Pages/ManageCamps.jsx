@@ -8,9 +8,10 @@ import Loading from "../../../Components/Shared/Loading";
 import UpdateModal from "../../../Components/UpdateModal";
 import toast from "react-hot-toast";
 import ConfirmToast from "../../../Components/Shared/ConfirmToast";
+import { axiosSecure } from "../../../Hooks/useAxios";
 
 const ManageCamps = () => {
-  const { user, camps, isLoading } = useAuth();
+  const { user, camps, isLoading, refetch } = useAuth();
   const filteredCamps = camps.filter((camp) => camp.hostEmail === user.email);
 
   const [selectedRowData, setSelectedRowData] = useState(null);
@@ -98,7 +99,6 @@ const ManageCamps = () => {
 
   // Function to handle delete button click
   const handleDelete = (campId) => {
-    // setSelectedRowId(campId);
     // toast tryout
     const confirmToastId = ConfirmToast({
       message: "Are you sure you want to delete this camp?",
@@ -107,15 +107,18 @@ const ManageCamps = () => {
       onConfirm: () => handleDeleteConfirmed(campId),
       onCancel: () => toast.dismiss(confirmToastId),
     });
-    // toast(confirmToast, { campId });
   };
 
   // Function to handle delete confirmation
   const handleDeleteConfirmed = (campId) => {
-    // Your logic to delete the camp goes here
     console.log("Deleting camp with ID:", campId);
-    // Show a success toast
-    toast.success("Camp deleted successfully!");
+    axiosSecure.delete(`/camp/${campId}`).then((res) => {
+      console.log(res);
+      if (res.status === 200) {
+        toast.success("Camp deleted successfully!");
+        refetch();
+      }
+    });
   };
 
   return (

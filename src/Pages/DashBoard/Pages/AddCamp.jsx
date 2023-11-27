@@ -10,7 +10,7 @@ import useToast from "../../../Components/Shared/useToast";
 
 const AddCamp = () => {
   const toast = useToast();
-  const { user } = useAuth();
+  const { user, refetch } = useAuth();
   const hostName = user?.displayName;
   const hostEmail = user?.email;
   const {
@@ -25,17 +25,20 @@ const AddCamp = () => {
       ...data,
       hostName,
       hostEmail,
-      participants:0,
+      participants: 0,
     };
-    axiosSecure.post("/camps", newCamp).then((res) => {
+    axiosSecure
+      .post("/camps", newCamp)
+      .then((res) => {
         console.log(res);
-        if(res.status==200) {
-            toast.success({content:"Camp Added Successfully"})
+        if (res.status == 200) {
+          refetch();
+          toast.success({ content: "Camp Added Successfully" });
         }
-    })
-    .catch((error) => {
-      toast.error({content:error.message});
-    })
+      })
+      .catch((error) => {
+        toast.error({ content: error.message });
+      });
   };
 
   return (

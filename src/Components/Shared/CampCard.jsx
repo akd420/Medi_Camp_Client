@@ -232,7 +232,7 @@ const CampCard = ({ camp, showJoin, dashboard }) => {
                     <select
                       name="gender"
                       className="select select-bordered w-full"
-                      defaultValue={userData?.gender}
+                      defaultValue={userData?.gender ? userData?.gender : ""}
                       required
                     >
                       <option disabled value="">

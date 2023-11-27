@@ -79,7 +79,7 @@ const CampDetailsCard = ({ camp }) => {
       .then((res) => {
         console.log(res.data);
         if (res.status == 200) {
-          document.getElementById("my_modal_2").close(true)
+          document.getElementById("my_modal_2").close(true);
           toast.success({ content: "Camp Joined Successfully" });
           axiosSecure
             .put(`/camps/${_id}`, { participants: participants + 1 })
@@ -94,7 +94,7 @@ const CampDetailsCard = ({ camp }) => {
       })
       .catch((error) => {
         if (error.response && error.response.status === 409) {
-          document.getElementById("my_modal_2").close(true)
+          document.getElementById("my_modal_2").close(true);
           toast.error({ content: "You have already joined this camp" });
         } else {
           toast.error({ content: error.message });
@@ -163,9 +163,9 @@ const CampDetailsCard = ({ camp }) => {
       <div>
         <dialog id="my_modal_2" className="modal modal-bottom sm:modal-middle">
           <div className="modal-box">
-          <div className="my-4">
-          <Heading main={'Join'} sub={'Camp'}></Heading>
-          </div>
+            <div className="my-4">
+              <Heading main={"Join"} sub={"Camp"}></Heading>
+            </div>
             <form action="" onSubmit={handleSubmit}>
               <div className="form-control">
                 <label className="label">
@@ -222,7 +222,7 @@ const CampDetailsCard = ({ camp }) => {
                     <select
                       name="gender"
                       className="select select-bordered w-full"
-                      defaultValue={userData?.gender}
+                      defaultValue={userData?.gender ? userData?.gender : ""}
                       required
                     >
                       <option disabled value="">
