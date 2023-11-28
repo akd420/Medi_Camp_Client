@@ -1,16 +1,11 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useMemo, useState } from "react";
-import useAuth from "../Hooks/useAuth";
-import Loader from "./Shared/Loader";
 import { usePagination, useTable } from "react-table";
-import Loading from "./Shared/Loading";
-import Heading from "./Shared/Heading";
-import ConfirmToast from "./Shared/ConfirmToast";
-import { axiosSecure } from "../Hooks/useAxios";
-import toast from "react-hot-toast";
-import PaymentModal from "./PaymentModal";
-
-const ParticipantRegisteredCamps = () => {
+import useAuth from "../../../Hooks/useAuth";
+import Loader from "../../../Components/Shared/Loader";
+import Loading from "../../../Components/Shared/Loading";
+import Heading from "../../../Components/Shared/Heading";
+const PaymentHistory = () => {
   const { user } = useAuth();
   const [camps, setCamps] = useState(null);
   const {
@@ -23,11 +18,14 @@ const ParticipantRegisteredCamps = () => {
   );
   useEffect(() => {
     refetch().then(() => {
-      setCamps(customData?.filter((camp) => camp.email === user.email));
+      setCamps(
+        customData?.filter(
+          (camp) => camp.email === user.email && camp.payment === "Paid"
+        )
+      );
     });
   }, [user, refetch, customData]);
 
-  const [selectedRowData, setSelectedRowData] = useState(null);
   const columns = useMemo(
     () => [
       { Header: "Camp Name", accessor: "campName" },
@@ -43,33 +41,13 @@ const ParticipantRegisteredCamps = () => {
         accessor: "confirmation",
       },
       {
-        Header: "Actions",
-        accessor: "actions",
-        Cell: ({ row }) => (
-          <div className="grid items-center justify-center gap-2">
-            <button
-              onClick={() => handlePay(row.original)}
-              className="rounded-lg bg-rose text-white px-2 py-1 disabled:w-14 disabled:h-8"
-              disabled={row.original.payment === "Paid"}
-            >
-              {row.original.payment === "Unpaid" ? "Pay" : "Paid"}
-            </button>
-            <button
-              onClick={() => handleCancel(row.original)}
-              className={
-                row.original.payment === "Paid"
-                  ? "hidden"
-                  : "btn md:btn-sm bg-rose text-white px-2 py-1"
-              }
-            >
-              Cancel
-            </button>
-          </div>
-        ),
+        Header: "Transaction ID",
+        accessor: "txId",
       },
     ],
     []
   );
+
   const data = useMemo(() => {
     if (!camps) {
       return [];
@@ -81,6 +59,7 @@ const ParticipantRegisteredCamps = () => {
       payment: camp.payment,
       confirmation: camp.confirmation,
       time: camp.time,
+      txId: camp.txId,
       id: camp._id,
     }));
   }, [camps]);
@@ -101,30 +80,7 @@ const ParticipantRegisteredCamps = () => {
     prepareRow,
   } = useTable({ columns, data, initialState: { pageSize: 5 } }, usePagination);
   const { pageIndex, pageSize } = state;
-  const handlePay = (rowData) => {
-    setSelectedRowData(rowData);
-  };
-  const handleCancel = (campId) => {
-    console.log("Cancel clicked", campId.id);
-    const confirmToastId = ConfirmToast({
-      message: "Are you sure you want to cancel?",
-      onConfirm: () => handleCancelConfirmed(campId.id, confirmToastId),
-      onCancel: () => toast.dismiss(confirmToastId),
-    });
-  };
-  const handleCancelConfirmed = (campId, confirmToastId) => {
-    console.log("Deleting registration with ID:", campId);
-    axiosSecure.delete(`/registeredCamps/${campId}`).then((res) => {
-      console.log(res);
-      if (res.status === 200) {
-        refetch();
-        toast.success("Registration Cancelled Successfully");
-        setTimeout(() => {
-          toast.dismiss(confirmToastId);
-        }, 2000);
-      }
-    });
-  };
+
   return (
     <div className="my-6 overflow-x-auto">
       {isLoading ? (
@@ -133,7 +89,7 @@ const ParticipantRegisteredCamps = () => {
         <div className="mx-2">
           {camps?.length > 0 ? (
             <div className="my-12 overflow-x-auto">
-              <Heading main={"Manage Registered"} sub={"Camps"}></Heading>
+              <Heading main={"Camps Paid"} sub={"For"}></Heading>
               <div className="overflow-x-auto relative">
                 <table
                   {...getTableProps()}
@@ -141,18 +97,13 @@ const ParticipantRegisteredCamps = () => {
                 >
                   <thead>
                     {headerGroups.map((headerGroup, idx) => (
-                      <tr
-                        key={idx}
-                        {...headerGroup.getHeaderGroupProps()}
-                        className="overflow-x-auto max-w-[50px]"
-                      >
+                      <tr key={idx} {...headerGroup.getHeaderGroupProps()}
+                      className="overflow-x-auto max-w-[50px]">
                         {headerGroup.headers.map((column, idx) => (
                           <th
                             key={idx}
                             {...column.getHeaderProps()}
-                            className={
-                              " md:table-cell overflow-x-auto max-w-[50px]"
-                            }
+                            className="overflow-x-auto max-w-[50px]"
                           >
                             {column.render("Header")}
                           </th>
@@ -164,18 +115,14 @@ const ParticipantRegisteredCamps = () => {
                     {page.map((row, idx) => {
                       prepareRow(row);
                       return (
-                        <tr
-                          key={idx}
-                          {...row.getRowProps()}
-                          className="max-w-[100px] overflow-x-auto whitespace-nowrap"
+                        <tr key={idx} {...row.getRowProps()}
+                        className="max-w-[100px] overflow-x-auto whitespace-nowrap"
                         >
                           {row.cells.map((cell, idx) => (
                             <td
                               key={idx}
                               {...cell.getCellProps()}
-                              className={
-                                " md:table-cell border text-center max-w-[50px] md:max-w-[100px] overflow-x-auto whitespace-nowrap"
-                              }
+                              className="border text-center max-w-[50px] md:max-w-[100px] overflow-x-auto whitespace-nowrap"
                             >
                               {cell.render("Cell")}
                             </td>
@@ -253,18 +200,9 @@ const ParticipantRegisteredCamps = () => {
                   </div>
                 </div>
               </div>
-              {/* Conditionally render PaymentModal */}
-              {selectedRowData && (
-                <PaymentModal
-                  setSelectedRowData={setSelectedRowData}
-                  rowData={selectedRowData}
-                  open={true}
-                  refetch={refetch}
-                ></PaymentModal>
-              )}
             </div>
           ) : (
-            <Heading main={"No Registered Camps"} sub={"Yet"}></Heading>
+            <Heading main={"No Camps Paid For"} sub={"Yet"}></Heading>
           )}
         </div>
       )}
@@ -272,4 +210,4 @@ const ParticipantRegisteredCamps = () => {
   );
 };
 
-export default ParticipantRegisteredCamps;
+export default PaymentHistory;

@@ -13,6 +13,8 @@ import ManageCamps from "../Pages/DashBoard/Pages/ManageCamps";
 import RegisteredCamps from "../Pages/DashBoard/Pages/RegisteredCamps";
 import CampDetails from "../Pages/DashBoard/Pages/CampDetails/CampDetails";
 import Profile from "../Pages/DashBoard/Pages/Profile/Profile";
+import PaymentHistory from "../Pages/DashBoard/Pages/PaymentHistory";
+import Feedback from "../Pages/DashBoard/Pages/Feedback";
 
 const Router = createBrowserRouter([
   {
@@ -71,6 +73,14 @@ const Router = createBrowserRouter([
         path: "/dashboard/registered-camps",
         element: <RegisteredCamps></RegisteredCamps>,
       },
+      {
+        path: "/dashboard/payment-history",
+        element: <PaymentHistory></PaymentHistory>,
+      },
+      {
+        path: "/dashboard/feedback",
+        element: <Feedback></Feedback>,
+      }
     ],
   },
 ]);

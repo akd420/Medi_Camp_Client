@@ -1,13 +1,9 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import Heading from "./Shared/Heading";
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
-import CheckOutForm from "./CheckOutForm";
 
-const PaymentModal = ({ rowData, open, setSelectedRowData, refetch }) => {
+const ReviewModal = ({rowData, open, setSelectedRowData, refetch}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   useEffect(() => {
     setIsModalOpen(open);
   }, [open]);
@@ -15,12 +11,9 @@ const PaymentModal = ({ rowData, open, setSelectedRowData, refetch }) => {
     setIsModalOpen(false);
     setSelectedRowData("");
   };
-  const stripePromise = loadStripe(
-    import.meta.env.VITE_PAYMENT_PUBLISHABLE_KEY
-  );
-  return (
-    <div>
-      <dialog
+    return (
+        <div>
+             <dialog
         id="my_modal_3"
         className="modal"
         open={isModalOpen}
@@ -37,16 +30,15 @@ const PaymentModal = ({ rowData, open, setSelectedRowData, refetch }) => {
           </form>
           <div>
             <div className="my-12">
-              <Heading main={"Pay"} sub={"Here"}></Heading>
+              <Heading main={"Review"} sub={"Camp"}></Heading>
+              <h1>Camp named: {rowData?.campName}</h1>
             </div>
-            <Elements stripe={stripePromise}>
-                <CheckOutForm rowData={rowData} refetch={refetch} closeModal={closeModal}></CheckOutForm>
-            </Elements>
+          
           </div>
         </div>
       </dialog>
-    </div>
-  );
+        </div>
+    );
 };
 
-export default PaymentModal;
+export default ReviewModal;

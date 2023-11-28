@@ -54,7 +54,7 @@ const OrganizerRegisteredCamps = () => {
           <div className="grid items-center justify-center gap-2">
             <button
               onClick={() => handleConfirm(row.original)}
-              className="btn btn-sm bg-rose text-white px-2 py-1"
+              className="btn btn-xs md:btn-sm bg-rose text-white px-2 py-1"
             >
               {row.original.confirmation}
             </button>
@@ -63,7 +63,7 @@ const OrganizerRegisteredCamps = () => {
               className={
                 row.original.payment === "Unpaid"
                   ? "hidden"
-                  : "btn btn-sm bg-rose text-white px-2 py-1"
+                  : "btn btn-xs md:btn-sm bg-rose text-white px-2 py-1"
               }
             >
               Cancel
@@ -169,33 +169,28 @@ const OrganizerRegisteredCamps = () => {
       {isLoading ? (
         <Loading></Loading>
       ) : (
-        <div className="mx-2">
+        <div className="px-2">
           {camps.length > 0 ? (
             <div className="my-12 overflow-x-auto">
               <Heading main={"Manage Organized"} sub={"Camps"}></Heading>
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto relative">
                 <table
                   {...getTableProps()}
                   className="table table-xs md:table-md overflow-x-auto mt-10"
                 >
                   <thead>
                     {headerGroups.map((headerGroup, idx) => (
-                      <tr key={idx} {...headerGroup.getHeaderGroupProps()}>
+                      <tr
+                        key={idx}
+                        {...headerGroup.getHeaderGroupProps()}
+                        className="overflow-x-auto max-w-[50px]"
+                      >
                         {headerGroup.headers.map((column, idx) => (
                           <th
                             key={idx}
                             {...column.getHeaderProps()}
                             className={
-                              (column.id === "location" ||
-                              column.id === "services" ||
-                              column.id === "professionals" ||
-                              column.id === "targetAudience"
-                                ? "hidden md:table-cell"
-                                : "") +
-                              (column.id === "location" ||
-                              column.id === "services"
-                                ? "hidden lg:table-cell"
-                                : "")
+                              " md:table-cell overflow-x-auto max-w-[50px]"
                             }
                           >
                             {column.render("Header")}
@@ -208,22 +203,17 @@ const OrganizerRegisteredCamps = () => {
                     {page.map((row, idx) => {
                       prepareRow(row);
                       return (
-                        <tr key={idx} {...row.getRowProps()}>
+                        <tr
+                          key={idx}
+                          {...row.getRowProps()}
+                          className="max-w-[100px] overflow-x-auto whitespace-nowrap"
+                        >
                           {row.cells.map((cell, idx) => (
                             <td
                               key={idx}
                               {...cell.getCellProps()}
                               className={
-                                (cell.column.id === "location" ||
-                                cell.column.id === "services" ||
-                                cell.column.id === "professionals" ||
-                                cell.column.id === "targetAudience"
-                                  ? "hidden md:table-cell"
-                                  : "") +
-                                (cell.column.id === "location" ||
-                                cell.column.id === "services"
-                                  ? "hidden lg:table-cell"
-                                  : "")
+                                " md:table-cell border text-center max-w-[50px] md:max-w-[100px] overflow-x-auto whitespace-nowrap"
                               }
                             >
                               {cell.render("Cell")}

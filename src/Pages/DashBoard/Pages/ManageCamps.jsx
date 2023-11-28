@@ -12,11 +12,11 @@ import { axiosSecure } from "../../../Hooks/useAxios";
 const ManageCamps = () => {
   const { user, camps, isLoading, refetch } = useAuth();
   const [filteredCamps, setFilteredCamps] = useState(null);
-  useEffect(()=>{
-    refetch().then(()=>{
+  useEffect(() => {
+    refetch().then(() => {
       setFilteredCamps(camps.filter((camp) => camp.hostEmail === user.email));
-    })
-  },[camps, refetch, user.email])
+    });
+  }, [camps, refetch, user.email]);
 
   const [selectedRowData, setSelectedRowData] = useState(null);
 
@@ -55,13 +55,13 @@ const ManageCamps = () => {
           <div className="grid items-center justify-center gap-2">
             <button
               onClick={() => handleUpdate(row.original)}
-              className="btn btn-sm bg-rose text-white px-2 py-1"
+              className="btn btn-xs md:btn-sm bg-rose text-white px-2 py-1"
             >
               Update
             </button>
             <button
               onClick={() => handleDelete(row.original.id)}
-              className="btn btn-sm bg-rose text-white px-2 py-1"
+              className="btn btn-xs md:btn-sm bg-rose text-white px-2 py-1"
             >
               Delete
             </button>
@@ -141,32 +141,32 @@ const ManageCamps = () => {
   };
 
   return (
-    <div className="my-6">
+    <div className="my-6 overflow-x-auto">
       {isLoading ? (
         <Loading></Loading>
       ) : (
         <div className="px-2">
           {filteredCamps?.length > 0 ? (
-            <div className="my-12">
+            <div className="my-12 overflow-x-auto">
               <Heading main={"Manage Your"} sub={"Camps"}></Heading>
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto relative">
                 <table
                   {...getTableProps()}
-                  className="table table-xs md:table-md mt-10 border-collapse"
+                  className="table table-xs md:table-md overflow-x-auto mt-10"
                 >
                   <thead>
                     {headerGroups.map((headerGroup, idx) => (
-                      <tr key={idx} {...headerGroup.getHeaderGroupProps()}>
+                      <tr
+                        key={idx}
+                        {...headerGroup.getHeaderGroupProps()}
+                        className="overflow-x-auto max-w-[50px]"
+                      >
                         {headerGroup.headers.map((column, idx) => (
                           <th
                             key={idx}
                             {...column.getHeaderProps()}
                             className={
-                              column.id === "location" ||
-                              column.id === "services" ||
-                              column.id === "professionals"
-                                ? "hidden md:table-cell"
-                                : column.getHeaderProps()
+                              " md:table-cell overflow-x-auto max-w-[50px]"
                             }
                           >
                             {column.render("Header")}
@@ -179,17 +179,17 @@ const ManageCamps = () => {
                     {page.map((row, idx) => {
                       prepareRow(row);
                       return (
-                        <tr key={idx} {...row.getRowProps()}>
+                        <tr
+                          key={idx}
+                          {...row.getRowProps()}
+                          className="max-w-[100px] overflow-x-auto whitespace-nowrap"
+                        >
                           {row.cells.map((cell, idx) => (
                             <td
                               key={idx}
                               {...cell.getCellProps()}
                               className={
-                                cell.column.id === "location" ||
-                                cell.column.id === "services" ||
-                                cell.column.id === "professionals"
-                                  ? "hidden md:table-cell"
-                                  : cell.getCellProps()
+                                " md:table-cell border text-center max-w-[50px] md:max-w-[100px] overflow-x-auto whitespace-nowrap"
                               }
                             >
                               {cell.render("Cell")}

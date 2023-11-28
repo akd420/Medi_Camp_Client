@@ -1,6 +1,8 @@
 import Footer from "../../Components/Shared/Footer";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
+import { VscFeedback } from "react-icons/vsc";
+import { MdPayments } from "react-icons/md";
 import { motion } from "framer-motion";
 import useAuth from "../../Hooks/useAuth";
 import useToast from "../../Components/Shared/useToast";
@@ -109,6 +111,46 @@ const DashBoard = () => {
       <div>
         <hr />
       </div>
+      {role === "participant" && (
+        <>
+          <li>
+            <NavLink
+              className={({ isActive, isPending }) =>
+                isPending
+                  ? "pending"
+                  : isActive
+                  ? "font-extrabold bg-rose text-white mr-1"
+                  : "mr-1"
+              }
+              to={"/dashboard/payment-history"}
+            >
+              <MdPayments></MdPayments>
+              Payment History
+            </NavLink>
+          </li>
+          <div>
+            <hr />
+          </div>
+          <li>
+            <NavLink
+              className={({ isActive, isPending }) =>
+                isPending
+                  ? "pending"
+                  : isActive
+                  ? "font-extrabold bg-rose text-white mr-1"
+                  : "mr-1"
+              }
+              to={"/dashboard/feedback"}
+            >
+              <VscFeedback></VscFeedback>
+              Feedback
+            </NavLink>
+          </li>
+          <div>
+            <hr />
+          </div>
+        </>
+      )}
       <li>
         <a onClick={logOut}>
           <BiLogOutCircle></BiLogOutCircle>

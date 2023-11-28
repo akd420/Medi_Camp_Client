@@ -6,7 +6,7 @@ import useAuth from "../Hooks/useAuth";
 import { axiosSecure } from "../Hooks/useAxios";
 import toast from "react-hot-toast";
 
-const CheckOutForm = ({ rowData, refetch }) => {
+const CheckOutForm = ({ rowData, refetch , closeModal}) => {
   const { user } = useAuth();
   const [error, setError] = useState("");
   const [clientSecret, setClientSecret] = useState("");
@@ -70,11 +70,13 @@ const CheckOutForm = ({ rowData, refetch }) => {
         axiosSecure
           .put(`/registeredCamp/${rowData?.id}`, {
             payment: "Paid",
+            txId: paymentIntent.id,
           })
           .then((res) => {
             console.log(res);
             if (res.status === 200) {
               refetch();
+              closeModal()
             }
           })
           .catch((error) => {
