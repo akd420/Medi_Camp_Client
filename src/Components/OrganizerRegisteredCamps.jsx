@@ -1,20 +1,20 @@
 /* eslint-disable react/prop-types */
-import { useMemo, useCallback, useState } from "react";
-import { useTable, usePagination } from "react-table";
-import useAuth from "../../../Hooks/useAuth";
-import Heading from "../../../Components/Shared/Heading";
-import Loading from "../../../Components/Shared/Loading";
-import UpdateModal from "../../../Components/UpdateModal";
+import { useCallback, useMemo } from "react";
+import { usePagination, useTable } from "react-table";
+import Loader from "./Shared/Loader";
+import useAuth from "../Hooks/useAuth";
+import Loading from "./Shared/Loading";
+import Heading from "./Shared/Heading";
+import ConfirmToast from "./Shared/ConfirmToast";
 import toast from "react-hot-toast";
-import ConfirmToast from "../../../Components/Shared/ConfirmToast";
-import { axiosSecure } from "../../../Hooks/useAxios";
-
-const ManageCamps = () => {
-  const { user, camps, isLoading, refetch } = useAuth();
-  const filteredCamps = camps.filter((camp) => camp.hostEmail === user.email);
-
-  const [selectedRowData, setSelectedRowData] = useState(null);
-
+import { axiosSecure } from "../Hooks/useAxios";
+const OrganizerRegisteredCamps = () => {
+  const { user } = useAuth();
+  const {
+    isLoading,
+    data: camps,
+    refetch,
+  } = Loader(`registeredCamps?email=${user?.email}`, "registeredCampsByEmail");
   const getTargetAudienceDisplayName = useCallback((targetAudience) => {
     switch (targetAudience) {
       case "general":
@@ -44,21 +44,29 @@ const ManageCamps = () => {
         Cell: ({ value }) => getTargetAudienceDisplayName(value),
       },
       {
+        Header: "Payment Status",
+        accessor: "payment",
+      },
+      {
         Header: "Actions",
         accessor: "actions",
         Cell: ({ row }) => (
           <div className="grid items-center justify-center gap-2">
             <button
-              onClick={() => handleUpdate(row.original)}
+              onClick={() => handleConfirm(row.original)}
               className="btn btn-sm bg-rose text-white px-2 py-1"
             >
-              Update
+              {row.original.confirmation}
             </button>
             <button
-              onClick={() => handleDelete(row.original.id)}
-              className="btn btn-sm bg-rose text-white px-2 py-1"
+              onClick={() => handleCancel(row.original)}
+              className={
+                row.original.payment === "Unpaid"
+                  ? "hidden"
+                  : "btn btn-sm bg-rose text-white px-2 py-1"
+              }
             >
-              Delete
+              Cancel
             </button>
           </div>
         ),
@@ -68,23 +76,25 @@ const ManageCamps = () => {
   );
 
   const data = useMemo(() => {
-    if (!filteredCamps) {
+    if (!camps) {
       return [];
     }
 
-    return filteredCamps.map((camp) => ({
+    return camps.map((camp) => ({
       campName: camp.campName,
       location: camp.location,
       services: camp.services,
       professionals: camp.professionals,
       targetAudience: camp.targetAudience,
       fees: camp.fees,
+      payment: camp.payment,
+      confirmation: camp.confirmation,
       time: camp.time,
       description: camp.description,
       imageURL: camp.imageURL,
       id: camp._id,
     }));
-  }, []);
+  }, [camps]);
 
   const {
     getTableProps,
@@ -105,49 +115,71 @@ const ManageCamps = () => {
 
   const { pageIndex, pageSize } = state;
 
-  const handleUpdate = (rowData) => {
-    setSelectedRowData(rowData);
-  };
-
-  const handleDelete = (campId) => {
-    // toast tryout
+  const handleConfirm = (rowData) => {
+    if (rowData.payment === "Unpaid") {
+      return toast.error("Payment is not done yet");
+    } else if (rowData.confirmation === "Confirmed") {
+      return toast.error("Already Confirmed");
+    }
     const confirmToastId = ConfirmToast({
-      message: "Are you sure you want to delete this camp?",
-      confirmLabel: "Delete",
-      cancelLabel: "Cancel",
-      onConfirm: () => handleDeleteConfirmed(campId, confirmToastId),
+      message: "Are you sure you want to confirm this registration?",
+      onConfirm: () => handleConfirmConfirmed(rowData.id, confirmToastId),
       onCancel: () => toast.dismiss(confirmToastId),
     });
   };
 
-  // Function to handle delete confirmation
-  const handleDeleteConfirmed = (campId, confirmToastId) => {
-    console.log("Deleting camp with ID:", campId);
-    axiosSecure.delete(`/camp/${campId}`).then((res) => {
+  const handleCancel = (campId) => {
+    const confirmToastId = ConfirmToast({
+      message: "Are you sure you want to cancel this registration?",
+      onConfirm: () => handleCancelConfirmed(campId.id, confirmToastId),
+      onCancel: () => toast.dismiss(confirmToastId),
+    });
+  };
+
+  const handleConfirmConfirmed = (campId, confirmToastId) => {
+    console.log("Confirming registration with ID:", campId);
+    axiosSecure
+      .put(`/registeredCamp/${campId}`, {
+        confirmation: "Confirmed",
+      })
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          refetch();
+          toast.success("Registration Confirmed Successfully");
+          setTimeout(() => {
+            toast.dismiss(confirmToastId);
+          }, 2000);
+        }
+      });
+  };
+
+  const handleCancelConfirmed = (campId, confirmToastId) => {
+    console.log("Deleting registration with ID:", campId);
+    axiosSecure.delete(`/registeredCamps/${campId}`).then((res) => {
       console.log(res);
       if (res.status === 200) {
         refetch();
-        toast.success("Camp deleted successfully!");
+        toast.success("Registration Cancelled Successfully");
         setTimeout(() => {
           toast.dismiss(confirmToastId);
         }, 2000);
       }
     });
   };
-
   return (
-    <div className="my-6">
+    <div className="my-6 overflow-x-auto">
       {isLoading ? (
         <Loading></Loading>
       ) : (
-        <div className="px-2">
-          {filteredCamps.length > 0 ? (
-            <div className="my-12">
-              <Heading main={"Manage Your"} sub={"Camps"}></Heading>
+        <div className="mx-2">
+          {camps.length > 0 ? (
+            <div className="my-12 overflow-x-auto">
+              <Heading main={"Manage Organized"} sub={"Camps"}></Heading>
               <div className="overflow-x-auto">
                 <table
                   {...getTableProps()}
-                  className="table table-xs md:table-md mt-10 border-collapse"
+                  className="table table-xs md:table-md overflow-x-auto mt-10"
                 >
                   <thead>
                     {headerGroups.map((headerGroup, idx) => (
@@ -157,11 +189,16 @@ const ManageCamps = () => {
                             key={idx}
                             {...column.getHeaderProps()}
                             className={
-                              column.id === "location" ||
+                              (column.id === "location" ||
                               column.id === "services" ||
-                              column.id === "professionals"
+                              column.id === "professionals" ||
+                              column.id === "targetAudience"
                                 ? "hidden md:table-cell"
-                                : column.getHeaderProps()
+                                : "") +
+                              (column.id === "location" ||
+                              column.id === "services"
+                                ? "hidden lg:table-cell"
+                                : "")
                             }
                           >
                             {column.render("Header")}
@@ -180,11 +217,16 @@ const ManageCamps = () => {
                               key={idx}
                               {...cell.getCellProps()}
                               className={
-                                cell.column.id === "location" ||
+                                (cell.column.id === "location" ||
                                 cell.column.id === "services" ||
-                                cell.column.id === "professionals"
+                                cell.column.id === "professionals" ||
+                                cell.column.id === "targetAudience"
                                   ? "hidden md:table-cell"
-                                  : cell.getCellProps()
+                                  : "") +
+                                (cell.column.id === "location" ||
+                                cell.column.id === "services"
+                                  ? "hidden lg:table-cell"
+                                  : "")
                               }
                             >
                               {cell.render("Cell")}
@@ -263,18 +305,9 @@ const ManageCamps = () => {
                   </div>
                 </div>
               </div>
-              {/* Conditionally render UpdateModal */}
-              {selectedRowData && (
-                <UpdateModal
-                  setSelectedRowData={setSelectedRowData}
-                  rowData={selectedRowData}
-                  open={true}
-                ></UpdateModal>
-              )}
-              {/* Conditionally render DeleteModal */}
             </div>
           ) : (
-            <Heading main={"No Camps"} sub={"Yet"}></Heading>
+            <Heading main={"No Registered Camps"} sub={"Yet"}></Heading>
           )}
         </div>
       )}
@@ -282,4 +315,4 @@ const ManageCamps = () => {
   );
 };
 
-export default ManageCamps;
+export default OrganizerRegisteredCamps;

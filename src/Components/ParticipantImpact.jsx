@@ -22,10 +22,8 @@ const getModifiedTargetAudienceName = (targetAudience) => {
 };
 
 const ParticipantImpact = () => {
-  const { user, camps, isLoading, refetch } = useAuth();
+  const { user, camps, isLoading} = useAuth();
   const {
-    isLoading: campLoading,
-    refetch: campRefetch,
     data: registeredCamps,
   } = Loader(`registeredCamp?email=${user?.email}`, "registeredCamps");
   const campIds = registeredCamps?.map((camp) => camp?.campId);

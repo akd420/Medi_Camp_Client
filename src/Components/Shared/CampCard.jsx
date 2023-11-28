@@ -73,8 +73,16 @@ const CampCard = ({ camp, showJoin, dashboard }) => {
       emergency,
       hostEmail,
       campId: _id,
-      payment: "pending",
-      confirmation: "pending",
+      payment: "Unpaid",
+      confirmation: "Pending",
+      campName,
+      imageURL,
+      location,
+      professionals,
+      services,
+      targetAudience,
+      time,
+      description,
     };
 
     axiosSecure
