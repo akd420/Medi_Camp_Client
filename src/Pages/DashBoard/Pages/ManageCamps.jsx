@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useMemo, useCallback, useState } from "react";
+import { useMemo, useCallback, useState, useEffect } from "react";
 import { useTable, usePagination } from "react-table";
 import useAuth from "../../../Hooks/useAuth";
 import Heading from "../../../Components/Shared/Heading";
@@ -11,7 +11,12 @@ import { axiosSecure } from "../../../Hooks/useAxios";
 
 const ManageCamps = () => {
   const { user, camps, isLoading, refetch } = useAuth();
-  const filteredCamps = camps.filter((camp) => camp.hostEmail === user.email);
+  const [filteredCamps, setFilteredCamps] = useState(null);
+  useEffect(()=>{
+    refetch().then(()=>{
+      setFilteredCamps(camps.filter((camp) => camp.hostEmail === user.email));
+    })
+  },[camps, refetch, user.email])
 
   const [selectedRowData, setSelectedRowData] = useState(null);
 
@@ -84,7 +89,7 @@ const ManageCamps = () => {
       imageURL: camp.imageURL,
       id: camp._id,
     }));
-  }, []);
+  }, [filteredCamps]);
 
   const {
     getTableProps,
@@ -141,7 +146,7 @@ const ManageCamps = () => {
         <Loading></Loading>
       ) : (
         <div className="px-2">
-          {filteredCamps.length > 0 ? (
+          {filteredCamps?.length > 0 ? (
             <div className="my-12">
               <Heading main={"Manage Your"} sub={"Camps"}></Heading>
               <div className="overflow-x-auto">

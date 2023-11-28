@@ -86,12 +86,9 @@ const OrganizerRegisteredCamps = () => {
       services: camp.services,
       professionals: camp.professionals,
       targetAudience: camp.targetAudience,
-      fees: camp.fees,
       payment: camp.payment,
       confirmation: camp.confirmation,
       time: camp.time,
-      description: camp.description,
-      imageURL: camp.imageURL,
       id: camp._id,
     }));
   }, [camps]);
