@@ -12,14 +12,14 @@ const UpdateModal = ({ rowData, open, setSelectedRowData }) => {
   const { refetch } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const toast = useToast();
-  
+
   useEffect(() => {
     setIsModalOpen(open);
   }, [open]);
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setSelectedRowData(""); // Reset selected row data
+    setSelectedRowData("");
   };
 
   const {
@@ -30,17 +30,19 @@ const UpdateModal = ({ rowData, open, setSelectedRowData }) => {
 
   const onSubmit = (data) => {
     console.log("Form data submitted:", data);
-    axiosSecure.put(`/camp/${rowData.id}`, data).then((res) => {
-      console.log(res);
-      if (res.status === 200) {
-        refetch();
-        closeModal();
-        toast.success({ content: "Camp Updated Successfully" });
-      }
-    })
-    .catch((err) => {
+    axiosSecure
+      .put(`/camp/${rowData.id}`, data)
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          refetch();
+          closeModal();
+          toast.success({ content: "Camp Updated Successfully" });
+        }
+      })
+      .catch((err) => {
         toast.error({ content: err.message });
-    })
+      });
   };
 
   return (

@@ -276,7 +276,6 @@ const ManageCamps = () => {
                   open={true}
                 ></UpdateModal>
               )}
-              {/* Conditionally render DeleteModal */}
             </div>
           ) : (
             <Heading main={"No Camps"} sub={"Yet"}></Heading>

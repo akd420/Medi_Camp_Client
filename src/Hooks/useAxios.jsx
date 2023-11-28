@@ -3,7 +3,7 @@ import { useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
 import useAuth from "./useAuth";
-// export const baseUrl = "https://service-server-six.vercel.app";
+// export const baseUrl = "https://medi-camp-server-lake.vercel.app";
 export const baseUrl = "http://localhost:5000";
 export const axiosSecure = axios.create({
   baseURL: baseUrl,

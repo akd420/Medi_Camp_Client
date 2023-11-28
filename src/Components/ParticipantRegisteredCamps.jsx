@@ -8,6 +8,7 @@ import Heading from "./Shared/Heading";
 import ConfirmToast from "./Shared/ConfirmToast";
 import { axiosSecure } from "../Hooks/useAxios";
 import toast from "react-hot-toast";
+import PaymentModal from "./PaymentModal";
 
 const ParticipantRegisteredCamps = () => {
   const { user } = useAuth();
@@ -25,6 +26,8 @@ const ParticipantRegisteredCamps = () => {
       setCamps(customData?.filter((camp) => camp.email === user.email));
     });
   }, [user, refetch, customData]);
+
+  const [selectedRowData, setSelectedRowData] = useState(null);
   const columns = useMemo(
     () => [
       { Header: "Camp Name", accessor: "campName" },
@@ -46,7 +49,8 @@ const ParticipantRegisteredCamps = () => {
           <div className="grid items-center justify-center gap-2">
             <button
               onClick={() => handlePay(row.original)}
-              className="btn btn-sm bg-rose text-white px-2 py-1"
+              className="rounded-lg bg-rose text-white px-2 py-1"
+              disabled={row.original.payment === "Paid"}
             >
               {row.original.payment === "Unpaid" ? "Pay" : "Paid"}
             </button>
@@ -98,15 +102,15 @@ const ParticipantRegisteredCamps = () => {
   } = useTable({ columns, data, initialState: { pageSize: 5 } }, usePagination);
   const { pageIndex, pageSize } = state;
   const handlePay = (rowData) => {
-    console.log("yes clicked", rowData);
+    setSelectedRowData(rowData);
   };
   const handleCancel = (campId) => {
     console.log("Cancel clicked", campId.id);
     const confirmToastId = ConfirmToast({
-        message: "Are you sure you want to cancel?",
-        onConfirm: () => handleCancelConfirmed(campId.id, confirmToastId),
-        onCancel: () => toast.dismiss(confirmToastId),
-    })
+      message: "Are you sure you want to cancel?",
+      onConfirm: () => handleCancelConfirmed(campId.id, confirmToastId),
+      onCancel: () => toast.dismiss(confirmToastId),
+    });
   };
   const handleCancelConfirmed = (campId, confirmToastId) => {
     console.log("Deleting registration with ID:", campId);
@@ -247,6 +251,15 @@ const ParticipantRegisteredCamps = () => {
                   </div>
                 </div>
               </div>
+              {/* Conditionally render PaymentModal */}
+              {selectedRowData && (
+                <PaymentModal
+                  setSelectedRowData={setSelectedRowData}
+                  rowData={selectedRowData}
+                  open={true}
+                  refetch={refetch}
+                ></PaymentModal>
+              )}
             </div>
           ) : (
             <Heading main={"No Registered Camps"} sub={"Yet"}></Heading>

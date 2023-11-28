@@ -6,10 +6,9 @@ import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import useAuth from "../../../Hooks/useAuth";
 import { axiosSecure } from "../../../Hooks/useAxios";
-import useToast from "../../../Components/Shared/useToast";
+import toast from "react-hot-toast";
 
 const AddCamp = () => {
-  const toast = useToast();
   const { user, refetch } = useAuth();
   const hostName = user?.displayName;
   const hostEmail = user?.email;
@@ -33,11 +32,15 @@ const AddCamp = () => {
         console.log(res);
         if (res.status == 200) {
           refetch();
-          toast.success({ content: "Camp Added Successfully" });
+
+          const added = toast.success("Camp Added Successfully");
+          setTimeout(() => {
+            toast.dismiss(added);
+          }, 2000);
         }
       })
       .catch((error) => {
-        toast.error({ content: error.message });
+        toast.error(error.message);
       });
   };
 
