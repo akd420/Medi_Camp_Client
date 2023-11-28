@@ -72,6 +72,8 @@ const CampDetailsCard = ({ camp }) => {
       emergency,
       hostEmail,
       campId: _id,
+      payment: "pending",
+      confirmation: "pending",
     };
 
     axiosSecure

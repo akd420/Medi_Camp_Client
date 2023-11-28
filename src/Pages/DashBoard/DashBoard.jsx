@@ -162,9 +162,6 @@ const DashBoard = () => {
           <div className="navbar-end">
             {user ? (
               <div className="dropdown dropdown-bottom dropdown-end flex items-center">
-                <div className="md:visible invisible">
-                  <p className="text-lg md:mr-5">{user?.displayName}</p>
-                </div>
                 <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                   <div className="w-10 rounded-full">
                     {user?.photoURL ? (
@@ -213,8 +210,8 @@ const DashBoard = () => {
           <ul className="menu p-4 w-52 min-h-full bg-base-200 text-base-content">
             {/* Sidebar content here */}
             <div className="text-center mt-5">
-              <h1>{userData?.name}</h1>
-              <h1>{userData?.email}</h1>
+              <h1 className="text-rose font-bold">{userData?.name}</h1>
+              <h1 className="font-semibold">{userData?.email}</h1>
             </div>
             <div className="md:mt-20 mt-32">{navLinks}</div>
           </ul>

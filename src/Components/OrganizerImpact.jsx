@@ -27,7 +27,7 @@ const OrganizerImpact = () => {
           )
       ) : (
         <div className="my-12">
-          <Heading main={"No"} sub={"Camps Found"}></Heading>
+          <Heading main={"No Organized"} sub={"Camps Found"}></Heading>
         </div>
       )
       }

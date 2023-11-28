@@ -73,6 +73,8 @@ const CampCard = ({ camp, showJoin, dashboard }) => {
       emergency,
       hostEmail,
       campId: _id,
+      payment: "pending",
+      confirmation: "pending",
     };
 
     axiosSecure
@@ -101,7 +103,7 @@ const CampCard = ({ camp, showJoin, dashboard }) => {
   };
   return (
     <div>
-      <div className="card card-compact bg-base-100">
+      <div className="card card-compact bg-base-100 hover:shadow-xl transition">
         <Link to={`/camps/${_id}`}>
           <figure>
             <img

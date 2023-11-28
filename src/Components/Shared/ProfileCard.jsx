@@ -8,6 +8,7 @@ import useToast from "./useToast";
 import userLogo from "../../assets/user.png";
 import { updateProfile } from "firebase/auth";
 import OrganizerImpact from "../organizerImpact";
+import ParticipantImpact from "../ParticipantImpact";
 const ProfileCard = ({ userData, refetch }) => {
   const { user } = useAuth();
   const photo = user?.photoURL || userLogo
@@ -125,6 +126,14 @@ const ProfileCard = ({ userData, refetch }) => {
         userData.role === "organizer" ? (
           <div className="mt-52">
             <OrganizerImpact></OrganizerImpact>
+          </div>
+        ) : ""
+      }
+       {/* participant's impact section  */}
+       {
+        userData.role === "participant" ? (
+          <div className="mt-52">
+            <ParticipantImpact></ParticipantImpact>
           </div>
         ) : ""
       }

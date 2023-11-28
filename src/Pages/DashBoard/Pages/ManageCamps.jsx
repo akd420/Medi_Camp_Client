@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useMemo, useCallback, useState } from "react";
-import { useTable } from "react-table";
+import { useTable, usePagination } from "react-table";
 import useAuth from "../../../Hooks/useAuth";
 import CustomContainer from "../../../Components/Shared/CustomContainer";
 import Heading from "../../../Components/Shared/Heading";
@@ -16,7 +16,6 @@ const ManageCamps = () => {
 
   const [selectedRowData, setSelectedRowData] = useState(null);
 
-  // Use useCallback for memoizing getTargetAudienceDisplayName
   const getTargetAudienceDisplayName = useCallback((targetAudience) => {
     switch (targetAudience) {
       case "general":
@@ -34,7 +33,6 @@ const ManageCamps = () => {
     }
   }, []);
 
-  // Use useMemo to memoize columns and data
   const columns = useMemo(
     () => [
       { Header: "Camp Name", accessor: "campName" },
@@ -46,12 +44,11 @@ const ManageCamps = () => {
         accessor: "targetAudience",
         Cell: ({ value }) => getTargetAudienceDisplayName(value),
       },
-      // Additional columns for update and delete buttons
       {
         Header: "Actions",
         accessor: "actions",
         Cell: ({ row }) => (
-          <div className="flex items-center justify-center gap-2">
+          <div className="grid items-center justify-center gap-2">
             <button
               onClick={() => handleUpdate(row.original)}
               className="btn bg-rose text-white px-2 py-1"
@@ -68,7 +65,7 @@ const ManageCamps = () => {
         ),
       },
     ],
-    [getTargetAudienceDisplayName]
+    []
   );
 
   const data = useMemo(
@@ -83,21 +80,34 @@ const ManageCamps = () => {
         time: camp.time,
         description: camp.description,
         imageURL: camp.imageURL,
-        id: camp._id, // Assuming you have an identifier for each camp
+        id: camp._id,
       })),
-    [filteredCamps]
+    []
   );
 
-  // Use useBlockLayout for table layout
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data });
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    page,
+    nextPage,
+    previousPage,
+    canNextPage,
+    canPreviousPage,
+    pageOptions,
+    state,
+    gotoPage,
+    setPageSize,
+    pageCount,
+    prepareRow,
+  } = useTable({ columns, data, initialState: { pageSize: 3 } }, usePagination);
 
-  // Function to handle update button click
+  const { pageIndex, pageSize } = state;
+
   const handleUpdate = (rowData) => {
     setSelectedRowData(rowData);
   };
 
-  // Function to handle delete button click
   const handleDelete = (campId) => {
     // toast tryout
     const confirmToastId = ConfirmToast({
@@ -122,21 +132,34 @@ const ManageCamps = () => {
   };
 
   return (
-    <div className="my-6">
+    <div className="my-6 overflow-x-auto">
       {isLoading ? (
         <Loading></Loading>
       ) : (
         <CustomContainer>
           {filteredCamps.length > 0 ? (
-            <div className="my-12">
+            <div className="my-12 overflow-x-auto">
               <Heading main={"Manage Your"} sub={"Camps"}></Heading>
               <div className="overflow-x-auto">
-                <table {...getTableProps()} className="table mt-10">
+                <table
+                  {...getTableProps()}
+                  className="table table-xs md:table-md lg:table-lg mt-10 border-collapse"
+                >
                   <thead>
                     {headerGroups.map((headerGroup, idx) => (
                       <tr key={idx} {...headerGroup.getHeaderGroupProps()}>
                         {headerGroup.headers.map((column, idx) => (
-                          <th key={idx} {...column.getHeaderProps()}>
+                          <th
+                            key={idx}
+                            {...column.getHeaderProps()}
+                            className={
+                              column.id === "location" ||
+                              column.id === "services" ||
+                              column.id === "professionals"
+                                ? "hidden md:table-cell"
+                                : column.getHeaderProps()
+                            }
+                          >
                             {column.render("Header")}
                           </th>
                         ))}
@@ -144,12 +167,22 @@ const ManageCamps = () => {
                     ))}
                   </thead>
                   <tbody {...getTableBodyProps()}>
-                    {rows.map((row, idx) => {
+                    {page.map((row, idx) => {
                       prepareRow(row);
                       return (
                         <tr key={idx} {...row.getRowProps()}>
                           {row.cells.map((cell, idx) => (
-                            <td key={idx} {...cell.getCellProps()}>
+                            <td
+                              key={idx}
+                              {...cell.getCellProps()}
+                              className={
+                                cell.column.id === "location" ||
+                                cell.column.id === "services" ||
+                                cell.column.id === "professionals"
+                                  ? "hidden md:table-cell"
+                                  : cell.getCellProps()
+                              }
+                            >
                               {cell.render("Cell")}
                             </td>
                           ))}
@@ -158,6 +191,73 @@ const ManageCamps = () => {
                     })}
                   </tbody>
                 </table>
+
+                <div className="mt-12 flex flex-col space-y-1 md:flex-row justify-between items-center">
+                  <span>
+                    Go to Page :{" "}
+                    <input
+                      type="number"
+                      className="w-12 border"
+                      defaultValue={pageIndex + 1}
+                      onChange={(e) => {
+                        const pageNumber = e.target.value
+                          ? Number(e.target.value) - 1
+                          : 0;
+                        gotoPage(pageNumber);
+                      }}
+                    />
+                  </span>
+                  <div className="flex flex-col space-y-1 md:flex-row justify-center items-center gap-6">
+                    <button
+                      className="btn bg-rose text-white"
+                      onClick={() => previousPage()}
+                      disabled={!canPreviousPage}
+                    >
+                      Previous
+                    </button>
+                    <button
+                      onClick={() => gotoPage(0)}
+                      disabled={!canPreviousPage}
+                      className="text-rose font-bold"
+                    >
+                      {"<<"}
+                    </button>
+                    <span>
+                      Page{" "}
+                      <strong>
+                        {pageIndex + 1} of {pageOptions.length}
+                      </strong>{" "}
+                    </span>
+                    <button
+                      onClick={() => gotoPage(pageCount - 1)}
+                      disabled={!canNextPage}
+                      className="text-rose font-bold"
+                    >
+                      {">>"}
+                    </button>
+                    <button
+                      className="btn bg-rose text-white"
+                      onClick={() => nextPage()}
+                      disabled={!canNextPage}
+                    >
+                      Next
+                    </button>
+                  </div>
+                  <div className="flex flex-col lg:flex-row lg:gap-2">
+                    <h1>Rows in page</h1>
+                    <select
+                      className="border"
+                      value={pageSize}
+                      onChange={(e) => setPageSize(Number(e.target.value))}
+                    >
+                      <option value="3">Show 3</option>
+                      <option value="5">Show 5</option>
+                      <option value="10">Show 10</option>
+                      <option value="15">Show 15</option>
+                      <option value="20">Show 20</option>
+                    </select>
+                  </div>
+                </div>
               </div>
               {/* Conditionally render UpdateModal */}
               {selectedRowData && (
