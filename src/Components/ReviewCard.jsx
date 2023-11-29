@@ -20,7 +20,7 @@ const ReviewCard = ({ camp }) => {
       <div className="card glass">
         {camp.reviewPhoto && (
           <figure>
-            <img src={camp?.reviewPhoto} alt="car!" />
+            <img src={camp?.reviewPhoto} alt="Image Not Found" />
           </figure>
         )}
         <div className="card-body text-center">

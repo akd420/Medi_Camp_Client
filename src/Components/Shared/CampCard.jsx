@@ -117,7 +117,7 @@ const CampCard = ({ camp, showJoin, dashboard }) => {
             <img
               className="rounded-t-lg md:h-96 w-full md:object-cover"
               src={imageURL}
-              alt="Shoes"
+              alt="Image not Found"
             />
           </figure>
         </Link>

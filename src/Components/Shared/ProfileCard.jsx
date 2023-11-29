@@ -30,8 +30,8 @@ const ProfileCard = ({ userData, refetch }) => {
     const gender = form.gender.value;
     const phone = form.phone.value;
     const address = form.address.value;
-    const specialty = form.specialty.value;
-    const certifications = form.certifications.value;
+    const specialty = form?.specialty?.value || "";
+    const certifications = form?.certifications?.value || "";
     const submit = {
       name,
       age,
