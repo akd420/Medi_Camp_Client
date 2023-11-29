@@ -82,15 +82,15 @@ const PaymentHistory = () => {
   const { pageIndex, pageSize } = state;
 
   return (
-    <div className="my-6 overflow-x-auto">
+    <div className="my-6">
       {isLoading ? (
         <Loading></Loading>
       ) : (
         <div className="mx-2">
           {camps?.length > 0 ? (
-            <div className="my-12 overflow-x-auto">
+            <div className="my-12">
               <Heading main={"Camps Paid"} sub={"For"}></Heading>
-              <div className="overflow-x-auto relative">
+              <div className="overflow-x-scroll relative">
                 <table
                   {...getTableProps()}
                   className="table table-xs md:table-md overflow-x-auto mt-10"

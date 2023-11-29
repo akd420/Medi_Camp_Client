@@ -37,7 +37,7 @@ const OrganizerRegisteredCamps = () => {
       { Header: "Camp Name", accessor: "campName" },
       { Header: "Location", accessor: "location" },
       { Header: "Services", accessor: "services" },
-      { Header: "Professionals", accessor: "professionals" },
+      { Header: "Username", accessor: "username" },
       {
         Header: "Target Audience",
         accessor: "targetAudience",
@@ -90,6 +90,7 @@ const OrganizerRegisteredCamps = () => {
       confirmation: camp.confirmation,
       time: camp.time,
       id: camp._id,
+      username: camp.name,
     }));
   }, [camps]);
 

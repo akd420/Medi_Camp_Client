@@ -1,4 +1,5 @@
 import CustomContainer from "../../Components/Shared/CustomContainer";
+import Testimonials from "../../Components/Testimonials";
 import Banner from "./Banner";
 import Faq from "./Faq";
 import NewsLetter from "./NewsLetter";
@@ -10,6 +11,7 @@ const Home = () => {
             <CustomContainer>
                 <Banner></Banner>
                 <PopularCamps></PopularCamps>
+                <Testimonials></Testimonials>
                 <Faq></Faq>
                 <NewsLetter></NewsLetter>
             </CustomContainer>

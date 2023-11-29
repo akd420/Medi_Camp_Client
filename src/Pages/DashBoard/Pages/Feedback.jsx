@@ -6,6 +6,7 @@ import Loader from "../../../Components/Shared/Loader";
 import Loading from "../../../Components/Shared/Loading";
 import Heading from "../../../Components/Shared/Heading";
 import ReviewModal from "../../../Components/ReviewModal";
+import toast from "react-hot-toast";
 const Feedback = () => {
   const { user } = useAuth();
   const [camps, setCamps] = useState(null);
@@ -75,6 +76,7 @@ const Feedback = () => {
       time: camp.time,
       txId: camp.txId,
       id: camp._id,
+      review: camp.review,
     }));
   }, [camps]);
   const {
@@ -95,6 +97,10 @@ const Feedback = () => {
   } = useTable({ columns, data, initialState: { pageSize: 5 } }, usePagination);
   const { pageIndex, pageSize } = state;
   const handleReview = (row) => {
+    if(row?.review){
+      toast.error("You have already reviewed this camp");
+      return;
+    }
     setSelectedRowData(row);
   };
 

@@ -22,11 +22,15 @@ const getModifiedTargetAudienceName = (targetAudience) => {
 };
 
 const ParticipantImpact = () => {
-  const { user, camps, isLoading} = useAuth();
-  const {
-    data: registeredCamps,
-  } = Loader(`registeredCamp?email=${user?.email}`, "registeredCamps");
-  const campIds = registeredCamps?.map((camp) => camp?.campId);
+  const { user, camps, isLoading } = useAuth();
+  const { data: registeredCamps } = Loader(
+    `registeredCamp?email=${user?.email}`,
+    "registeredCamps"
+  );
+  const filterBymail = registeredCamps?.filter(
+    (camp) => camp.email === user?.email
+  );
+  const campIds = filterBymail?.map((camp) => camp?.campId);
   const filteredCamps = camps?.filter((camp) => campIds?.includes(camp._id));
   const dashboard = true;
 
@@ -36,7 +40,7 @@ const ParticipantImpact = () => {
     medicalAreas.add(getModifiedTargetAudienceName(camp.targetAudience));
   });
 
-  const uniqueMedicalAreas = Array.from(medicalAreas); 
+  const uniqueMedicalAreas = Array.from(medicalAreas);
 
   return (
     <div className="my-12">
@@ -83,10 +87,8 @@ const ParticipantImpact = () => {
         </div>
       ) : (
         <div className="my-12">
-          <Heading
-            main={"No Medical Areas"}
-            sub={"Interested Yet"}
-          ></Heading>
+          <Heading main={"No Medical Areas"} sub={"Interested Yet"}></Heading>
+          <h1 className="text-center mt-5">Join camps to see this</h1>
         </div>
       )}
     </div>
