@@ -59,36 +59,49 @@ const AuthProvider = ({ children }) => {
     },
   });
 
+  const {
+    data: upCamps,
+    isLoading: upLoading,
+    refetch: upFetch,
+  } = useQuery({
+    queryKey: ["upCamps"],
+    queryFn: async () => {
+      const response = await axios.get(
+        `${baseUrl}/upcomingCamps?email=${user?.email}`,
+        { withCredentials: true }
+      );
+      return response.data;
+    },
+  });
+
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser) => {
       const userEmail = currentUser?.email || user?.email;
       const loggedUser = { email: userEmail };
       setUser(currentUser);
       if (user) {
-        const response = axios
-          .get(`${baseUrl}/users?email=${user?.email}`)
-          .then((res) => {
-            setUserData(res.data);
-          });
+        axios.get(`${baseUrl}/users?email=${user?.email}`).then((res) => {
+          setUserData(res.data);
+        });
       }
       setLoading(false);
-      // if (currentUser) {
-      //   axios
-      //     .post(`${baseURL}/jwt`, loggedUser, {
-      //       withCredentials: true,
-      //     })
-      //     .then((res) => {
-      //       console.log("token response", res.data);
-      //     });
-      // } else {
-      //   axios
-      //     .post(`${baseURL}/logout`, loggedUser, {
-      //       withCredentials: true,
-      //     })
-      //     .then((res) => {
-      //       console.log("logout response", res.data);
-      //     });
-      // }
+      if (currentUser) {
+        axios
+          .post(`${baseUrl}/jwt`, loggedUser, {
+            withCredentials: true,
+          })
+          .then((res) => {
+            console.log("token response", res.data);
+          });
+      } else {
+        axios
+          .post(`${baseUrl}/logout`, loggedUser, {
+            withCredentials: true,
+          })
+          .then((res) => {
+            console.log("logout response", res.data);
+          });
+      }
     });
   }, [user]);
   const authenticate = {
@@ -102,6 +115,9 @@ const AuthProvider = ({ children }) => {
     camps,
     isLoading,
     refetch,
+    upCamps,
+    upLoading,
+    upFetch,
   };
 
   return (

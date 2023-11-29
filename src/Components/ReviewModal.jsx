@@ -2,11 +2,12 @@
 import { useEffect, useState } from "react";
 import Heading from "./Shared/Heading";
 import useAuth from "../Hooks/useAuth";
-import { axiosSecure } from "../Hooks/useAxios";
 import toast from "react-hot-toast";
+import useAxios from "../Hooks/useAxios";
 
 const ReviewModal = ({ rowData, open, setSelectedRowData, refetch }) => {
   const { user } = useAuth();
+  const axiosSecure = useAxios();
   const [isModalOpen, setIsModalOpen] = useState(false);
   useEffect(() => {
     setIsModalOpen(open);
@@ -22,7 +23,7 @@ const ReviewModal = ({ rowData, open, setSelectedRowData, refetch }) => {
     const review = form.longDis.value;
     const reviewPhoto = form.photo.value || "";
     axiosSecure
-      .put(`/registeredCamp/${rowData?.id}`, {
+      .put(`/registeredCamp/${rowData?.id}?email=${user?.email}`, {
         rating,
         review,
         reviewPhoto,

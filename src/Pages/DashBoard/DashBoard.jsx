@@ -66,7 +66,25 @@ const DashBoard = () => {
                 to={"/dashboard/add-camp"}
               >
                 <FaClinicMedical></FaClinicMedical>
-                Add Camps
+                Add Camp
+              </NavLink>
+            </li>
+            <div>
+              <hr />
+            </div>
+            <li>
+              <NavLink
+                className={({ isActive, isPending }) =>
+                  isPending
+                    ? "pending"
+                    : isActive
+                    ? "font-extrabold bg-rose text-white mr-1"
+                    : "mr-1"
+                }
+                to={"/dashboard/add-upcoming-camp"}
+              >
+                <FaClinicMedical></FaClinicMedical>
+                Add Upcoming Camps
               </NavLink>
             </li>
             <div>
@@ -247,7 +265,7 @@ const DashBoard = () => {
             className="drawer-overlay"
           ></label>
 
-          <ul className="menu p-4 w-52 min-h-full bg-base-200 text-base-content">
+          <ul className="menu p-4 w-fit min-h-full bg-base-200 text-base-content">
             {/* Sidebar content here */}
             <div className="text-center mt-5">
               <h1 className="text-rose font-bold">{userData?.name}</h1>

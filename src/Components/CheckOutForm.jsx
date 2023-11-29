@@ -1,13 +1,13 @@
 /* eslint-disable react/prop-types */
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import CustomButton from "./Shared/CustomButton";
 import { useEffect, useState } from "react";
 import useAuth from "../Hooks/useAuth";
-import { axiosSecure } from "../Hooks/useAxios";
+import useAxios from "../Hooks/useAxios";
 import toast from "react-hot-toast";
 
-const CheckOutForm = ({ rowData, refetch , closeModal}) => {
+const CheckOutForm = ({ rowData, refetch, closeModal }) => {
   const { user } = useAuth();
+  const axiosSecure = useAxios();
   const [error, setError] = useState("");
   const [clientSecret, setClientSecret] = useState("");
 
@@ -17,11 +17,13 @@ const CheckOutForm = ({ rowData, refetch , closeModal}) => {
 
   useEffect(() => {
     axiosSecure
-      .post("/create-payment-intent", { price: rowData?.fees })
+      .post(`/create-payment-intent?email=${user?.email}`, {
+        price: rowData?.fees,
+      })
       .then((res) => {
         setClientSecret(res.data.clientSecret);
       });
-  }, [rowData?.fees]);
+  }, [axiosSecure, rowData?.fees, user?.email]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -68,7 +70,7 @@ const CheckOutForm = ({ rowData, refetch , closeModal}) => {
           `Payment Successful. Transaction ID: ${paymentIntent.id}`
         );
         axiosSecure
-          .put(`/registeredCamp/${rowData?.id}`, {
+          .put(`/registeredCamp/${rowData?.id}?email=${user?.email}`, {
             payment: "Paid",
             txId: paymentIntent.id,
           })
@@ -76,7 +78,7 @@ const CheckOutForm = ({ rowData, refetch , closeModal}) => {
             console.log(res);
             if (res.status === 200) {
               refetch();
-              closeModal()
+              closeModal();
             }
           })
           .catch((error) => {

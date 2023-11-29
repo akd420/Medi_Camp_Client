@@ -3,14 +3,15 @@ import useAuth from "../../Hooks/useAuth";
 import { FaRegEdit } from "react-icons/fa";
 import CustomButton from "./CustomButton";
 import Heading from "./Heading";
-import { axiosSecure } from "../../Hooks/useAxios";
 import useToast from "./useToast";
 import userLogo from "../../assets/user.png";
 import { updateProfile } from "firebase/auth";
 import OrganizerImpact from "../organizerImpact";
 import ParticipantImpact from "../ParticipantImpact";
+import useAxios from "../../Hooks/useAxios";
 const ProfileCard = ({ userData, refetch }) => {
   const { user } = useAuth();
+  const axiosSecure = useAxios();
   const photo = user?.photoURL || userLogo;
   const toast = useToast();
   let roles = userData.role;
@@ -41,7 +42,7 @@ const ProfileCard = ({ userData, refetch }) => {
       specialty,
       certifications,
     };
-    axiosSecure.put(`/users/${userData._id}`, submit).then((res) => {
+    axiosSecure.put(`/users/${userData._id}?email=${user?.email}`, submit).then((res) => {
       updateProfile(user, {
         photoURL: image,
       });

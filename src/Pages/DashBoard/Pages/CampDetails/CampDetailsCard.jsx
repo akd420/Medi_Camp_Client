@@ -2,11 +2,12 @@ import CustomButton from "../../../../Components/Shared/CustomButton";
 import Heading from "../../../../Components/Shared/Heading";
 import useToast from "../../../../Components/Shared/useToast";
 import useAuth from "../../../../Hooks/useAuth";
-import { axiosSecure } from "../../../../Hooks/useAxios";
+import useAxios from "../../../../Hooks/useAxios";
 
 /* eslint-disable react/prop-types */
-const CampDetailsCard = ({ camp }) => {
+const CampDetailsCard = ({ camp, upcoming }) => {
   const { userData, user, refetch } = useAuth();
+  const axiosSecure = useAxios();
   const toast = useToast();
   let role = null;
   if (userData) {
@@ -85,14 +86,16 @@ const CampDetailsCard = ({ camp }) => {
     };
 
     axiosSecure
-      .post("/registeredCamps", submit)
+      .post(`/registeredCamps?email=${user?.email}`, submit)
       .then((res) => {
         console.log(res.data);
         if (res.status == 200) {
           document.getElementById("my_modal_2").close(true);
           toast.success({ content: "Camp Joined Successfully" });
           axiosSecure
-            .put(`/camps/${_id}`, { participants: participants + 1 })
+            .put(`/camps/${_id}?email=${user?.email}`, {
+              participants: participants + 1,
+            })
             .then((res) => {
               console.log(res.data);
             });
@@ -132,10 +135,14 @@ const CampDetailsCard = ({ camp }) => {
             <p>
               <span className="font-medium">Services:</span> {services}
             </p>
-            <p>
-              <span className="font-medium">Professionals in Attendance:</span>{" "}
-              {professionals}
-            </p>
+            {!upcoming && (
+              <p>
+                <span className="font-medium">
+                  Professionals in Attendance:
+                </span>{" "}
+                {professionals}
+              </p>
+            )}
             <p>
               <span className="font-medium">Fees:</span> ${fees}
             </p>
@@ -162,7 +169,11 @@ const CampDetailsCard = ({ camp }) => {
             <div
               onClick={() => document.getElementById("my_modal_2").showModal()}
             >
-              <CustomButton>Join Camp</CustomButton>
+              {upcoming ? (
+                <CustomButton>Join Upcoming Camp</CustomButton>
+              ) : (
+                <CustomButton>Join Camp</CustomButton>
+              )}
             </div>
           ) : (
             ""

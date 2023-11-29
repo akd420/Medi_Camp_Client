@@ -18,6 +18,8 @@ import Feedback from "../Pages/DashBoard/Pages/Feedback";
 import OrganizerRoute from "./OrganizerRoutes";
 import ParticipantRoutes from "./ParticipantRoutes";
 import NotProRoutes from "./NotProRoutes";
+import AddUpcomingCamps from "../Pages/DashBoard/Pages/AddUpcomingCamps";
+import UpDetails from "../Components/UpDetails";
 
 const Router = createBrowserRouter([
   {
@@ -50,6 +52,10 @@ const Router = createBrowserRouter([
         element: <CampDetails></CampDetails>,
       },
       {
+        path: "/upCamps/:id",
+        element: <UpDetails></UpDetails>,
+      },
+      {
         path: "/contact",
         element: <ContactUs></ContactUs>,
       },
@@ -78,6 +84,16 @@ const Router = createBrowserRouter([
           <PrivateRoute>
             <OrganizerRoute>
               <AddCamp></AddCamp>,
+            </OrganizerRoute>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/dashboard/add-upcoming-camp",
+        element: (
+          <PrivateRoute>
+            <OrganizerRoute>
+              <AddUpcomingCamps></AddUpcomingCamps>
             </OrganizerRoute>
           </PrivateRoute>
         ),

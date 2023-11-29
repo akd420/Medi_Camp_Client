@@ -1,15 +1,14 @@
 /* eslint-disable react/no-unescaped-entities */
-import { useForm, Controller } from "react-hook-form";
-import Heading from "../../../Components/Shared/Heading";
-import CustomContainer from "../../../Components/Shared/CustomContainer";
-import ReactDatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import { Controller, useForm } from "react-hook-form";
 import useAuth from "../../../Hooks/useAuth";
 import toast from "react-hot-toast";
 import { Helmet } from "react-helmet-async";
+import CustomContainer from "../../../Components/Shared/CustomContainer";
+import ReactDatePicker from "react-datepicker";
+import Heading from "../../../Components/Shared/Heading";
 import useAxios from "../../../Hooks/useAxios";
 
-const AddCamp = () => {
+const AddUpcomingCamps = () => {
   const { user, refetch } = useAuth();
   const axiosSecure = useAxios();
   const hostName = user?.displayName;
@@ -19,23 +18,23 @@ const AddCamp = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-
   const onSubmit = (data) => {
     console.log("Form data submitted:", data);
     const newCamp = {
       ...data,
       hostName,
       hostEmail,
-      participants: 0,
+      intParticipants: 0,
+      intPro: 0,
     };
     axiosSecure
-      .post(`/camps?email=${user?.email}`, newCamp)
+      .post(`/upcomingCamps?email=${user?.email}`, newCamp)
       .then((res) => {
         console.log(res);
         if (res.status == 200) {
           refetch();
 
-          const added = toast.success("Camp Added Successfully");
+          const added = toast.success("Upcoming Camp Added Successfully");
           setTimeout(() => {
             toast.dismiss(added);
           }, 2000);
@@ -45,15 +44,14 @@ const AddCamp = () => {
         toast.error(error.message);
       });
   };
-
   return (
     <div>
       <Helmet>
-        <title>Medicamp | Add Camps</title>
+        <title>Medicamp | Add Upcoming Camps</title>
       </Helmet>
       <CustomContainer>
         <div className="my-12">
-          <Heading main={"Add"} sub={"Camps"}></Heading>
+          <Heading main={"Add Upcoming"} sub={"Camps"}></Heading>
         </div>
         <form className="mb-12" onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-1 md:grid-cols-2 mb-8">
@@ -152,38 +150,6 @@ const AddCamp = () => {
               )}
             </div>
           </div>
-          {/* Healthcare Professionals in Attendance */}
-          <div className="md:flex mb-8">
-            <div className="form-control w-full">
-              <label className="label">
-                <span className="label-text">
-                  Healthcare Professionals in Attendance
-                </span>
-              </label>
-              <label className="input-group">
-                <Controller
-                  name="professionals"
-                  control={control}
-                  rules={{ required: "Healthcare Professionals are required" }}
-                  render={({ field }) => (
-                    <input
-                      type="text"
-                      {...field}
-                      placeholder="Professional Lists...."
-                      className={`input input-bordered w-full ${
-                        errors.professionals ? "input-error" : ""
-                      }`}
-                    />
-                  )}
-                />
-              </label>
-              {errors.professionals && (
-                <span className="text-error">
-                  {errors.professionals.message}
-                </span>
-              )}
-            </div>
-          </div>
           {/* Venue Location */}
           <div className="md:flex mb-8">
             <div className="form-control w-full">
@@ -257,7 +223,6 @@ const AddCamp = () => {
                       onChange={(date) => {
                         field.onChange(date);
                       }}
-                      required
                       showTimeSelect
                       timeFormat="h:mm aa"
                       timeIntervals={15}
@@ -332,7 +297,7 @@ const AddCamp = () => {
             </div>
           </div>
           <button type="submit" className="w-full bg-rose text-white btn">
-            Add Camp
+            Add Upcoming Camp
           </button>
         </form>
       </CustomContainer>
@@ -340,4 +305,4 @@ const AddCamp = () => {
   );
 };
 
-export default AddCamp;
+export default AddUpcomingCamps;

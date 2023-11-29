@@ -7,10 +7,11 @@ import Loading from "./Shared/Loading";
 import Heading from "./Shared/Heading";
 import ConfirmToast from "./Shared/ConfirmToast";
 import toast from "react-hot-toast";
-import { axiosSecure } from "../Hooks/useAxios";
 import FilterTable from "./Shared/FilterTable";
+import useAxios from "../Hooks/useAxios";
 const OrganizerRegisteredCamps = () => {
   const { user } = useAuth();
+  const axiosSecure = useAxios();
   const {
     isLoading,
     data: camps,
@@ -143,7 +144,7 @@ const OrganizerRegisteredCamps = () => {
   const handleConfirmConfirmed = (campId, confirmToastId) => {
     console.log("Confirming registration with ID:", campId);
     axiosSecure
-      .put(`/registeredCamp/${campId}`, {
+      .put(`/registeredCamp/${campId}?email=${user?.email}`, {
         confirmation: "Confirmed",
       })
       .then((res) => {
@@ -160,7 +161,7 @@ const OrganizerRegisteredCamps = () => {
 
   const handleCancelConfirmed = (campId, confirmToastId) => {
     console.log("Deleting registration with ID:", campId);
-    axiosSecure.delete(`/registeredCamps/${campId}`).then((res) => {
+    axiosSecure.delete(`/registeredCamps/${campId}?email=${user?.email}`).then((res) => {
       console.log(res);
       if (res.status === 200) {
         refetch();

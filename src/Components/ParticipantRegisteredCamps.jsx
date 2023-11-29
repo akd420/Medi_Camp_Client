@@ -6,13 +6,14 @@ import { useGlobalFilter, usePagination, useTable } from "react-table";
 import Loading from "./Shared/Loading";
 import Heading from "./Shared/Heading";
 import ConfirmToast from "./Shared/ConfirmToast";
-import { axiosSecure } from "../Hooks/useAxios";
 import toast from "react-hot-toast";
 import PaymentModal from "./PaymentModal";
 import FilterTable from "./Shared/FilterTable";
+import useAxios from "../Hooks/useAxios";
 
 const ParticipantRegisteredCamps = () => {
   const { user } = useAuth();
+  const axiosSecure = useAxios();
   const [camps, setCamps] = useState(null);
   const {
     isLoading,
@@ -116,7 +117,7 @@ const ParticipantRegisteredCamps = () => {
   };
   const handleCancelConfirmed = (campId, confirmToastId) => {
     console.log("Deleting registration with ID:", campId);
-    axiosSecure.delete(`/registeredCamps/${campId}`).then((res) => {
+    axiosSecure.delete(`/registeredCamps/${campId}?email=${user?.email}`).then((res) => {
       console.log(res);
       if (res.status === 200) {
         refetch();

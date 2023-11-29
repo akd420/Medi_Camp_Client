@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 const FilterTable = ({ filter, setFilter }) => {
   return (
     <div className="join flex mt-12 justify-center">

@@ -7,12 +7,13 @@ import Loading from "../../../Components/Shared/Loading";
 import UpdateModal from "../../../Components/UpdateModal";
 import toast from "react-hot-toast";
 import ConfirmToast from "../../../Components/Shared/ConfirmToast";
-import { axiosSecure } from "../../../Hooks/useAxios";
 import { Helmet } from "react-helmet-async";
 import FilterTable from "../../../Components/Shared/FilterTable";
+import useAxios from "../../../Hooks/useAxios";
 
 const ManageCamps = () => {
   const { user, camps, isLoading, refetch } = useAuth();
+  const axiosSecure = useAxios();
   const [filteredCamps, setFilteredCamps] = useState(null);
   useEffect(() => {
     refetch().then(() => {
@@ -135,7 +136,7 @@ const ManageCamps = () => {
   // Function to handle delete confirmation
   const handleDeleteConfirmed = (campId, confirmToastId) => {
     console.log("Deleting camp with ID:", campId);
-    axiosSecure.delete(`/camp/${campId}`).then((res) => {
+    axiosSecure.delete(`/camp/${campId}?email=${user?.email}`).then((res) => {
       console.log(res);
       if (res.status === 200) {
         refetch();

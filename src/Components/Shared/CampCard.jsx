@@ -2,12 +2,13 @@ import { Link } from "react-router-dom";
 import useAuth from "../../Hooks/useAuth";
 import CustomButton from "./CustomButton";
 import useToast from "./useToast";
-import { axiosSecure } from "../../Hooks/useAxios";
 import Heading from "./Heading";
+import useAxios from "../../Hooks/useAxios";
 
 /* eslint-disable react/prop-types */
 const CampCard = ({ camp, showJoin, dashboard }) => {
   const { user, userData, refetch } = useAuth();
+  const axiosSecure = useAxios();
   const {
     campName,
     fees,
@@ -86,14 +87,14 @@ const CampCard = ({ camp, showJoin, dashboard }) => {
     };
 
     axiosSecure
-      .post("/registeredCamps", submit)
+      .post(`/registeredCamps?email=${user?.email}`, submit)
       .then((res) => {
         console.log(res.data);
         if (res.status == 200) {
           document.getElementById(`modal_${_id}`).close(true);
           toast.success({ content: "Camp Joined Successfully" });
           axiosSecure
-            .put(`/camps/${_id}`, { participants: participants + 1 })
+            .put(`/camps/${_id}?email=${user?.email}`, { participants: participants + 1 })
             .then((res) => {
               console.log(res.data);
               refetch();

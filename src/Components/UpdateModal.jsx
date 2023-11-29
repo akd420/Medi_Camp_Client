@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Heading from "./Shared/Heading";
 import ReactDatePicker from "react-datepicker";
-import { axiosSecure } from "../Hooks/useAxios";
 import useToast from "./Shared/useToast";
 import useAuth from "../Hooks/useAuth";
+import useAxios from "../Hooks/useAxios";
 
 const UpdateModal = ({ rowData, open, setSelectedRowData }) => {
-  const { refetch } = useAuth();
+  const {user, refetch } = useAuth();
+  const axiosSecure = useAxios();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const toast = useToast();
 
@@ -31,7 +32,7 @@ const UpdateModal = ({ rowData, open, setSelectedRowData }) => {
   const onSubmit = (data) => {
     console.log("Form data submitted:", data);
     axiosSecure
-      .put(`/camp/${rowData.id}`, data)
+      .put(`/camp/${rowData.id}?email=${user?.email}`, data)
       .then((res) => {
         console.log(res);
         if (res.status === 200) {

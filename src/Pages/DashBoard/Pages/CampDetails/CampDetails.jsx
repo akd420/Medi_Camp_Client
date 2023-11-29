@@ -7,18 +7,20 @@ import { Helmet } from "react-helmet-async";
 
 const CampDetails = () => {
   const { id } = useParams();
-  const { isLoading, data:camp } = Loader(`/camps/${id}`, "campDetails");
+  const { isLoading, data: camp } = Loader(`/camps/${id}`, "campDetails");
 
   return (
     <div>
-      <Helmet>
-        <title>Medicamp | Camp Details</title>
-      </Helmet>
       <CustomContainer>
         {isLoading ? (
           <Loading></Loading>
         ) : (
-          <CampDetailsCard camp={camp}></CampDetailsCard>
+          <>
+            <Helmet>
+              <title>Medicamp | {camp?.campName}</title>
+            </Helmet>
+            <CampDetailsCard camp={camp}></CampDetailsCard>
+          </>
         )}
       </CustomContainer>
     </div>
