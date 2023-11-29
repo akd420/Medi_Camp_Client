@@ -7,6 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import useAuth from "../../../Hooks/useAuth";
 import { axiosSecure } from "../../../Hooks/useAxios";
 import toast from "react-hot-toast";
+import { Helmet } from "react-helmet-async";
 
 const AddCamp = () => {
   const { user, refetch } = useAuth();
@@ -46,6 +47,9 @@ const AddCamp = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>Medicamp | Add Camps</title>
+      </Helmet>
       <CustomContainer>
         <div className="my-12">
           <Heading main={"Add"} sub={"Camps"}></Heading>

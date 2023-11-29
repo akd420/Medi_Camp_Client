@@ -3,6 +3,7 @@ import Loader from "../../../../Components/Shared/Loader";
 import Loading from "../../../../Components/Shared/Loading";
 import CustomContainer from "../../../../Components/Shared/CustomContainer";
 import CampDetailsCard from "./CampDetailsCard";
+import { Helmet } from "react-helmet-async";
 
 const CampDetails = () => {
   const { id } = useParams();
@@ -10,6 +11,9 @@ const CampDetails = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>Medicamp | Camp Details</title>
+      </Helmet>
       <CustomContainer>
         {isLoading ? (
           <Loading></Loading>

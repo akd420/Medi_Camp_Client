@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useCallback, useMemo } from "react";
-import { usePagination, useTable } from "react-table";
+import { useGlobalFilter, usePagination, useTable } from "react-table";
 import Loader from "./Shared/Loader";
 import useAuth from "../Hooks/useAuth";
 import Loading from "./Shared/Loading";
@@ -8,6 +8,7 @@ import Heading from "./Shared/Heading";
 import ConfirmToast from "./Shared/ConfirmToast";
 import toast from "react-hot-toast";
 import { axiosSecure } from "../Hooks/useAxios";
+import FilterTable from "./Shared/FilterTable";
 const OrganizerRegisteredCamps = () => {
   const { user } = useAuth();
   const {
@@ -108,10 +109,15 @@ const OrganizerRegisteredCamps = () => {
     gotoPage,
     setPageSize,
     pageCount,
+    setGlobalFilter,
     prepareRow,
-  } = useTable({ columns, data, initialState: { pageSize: 5 } }, usePagination);
+  } = useTable(
+    { columns, data, initialState: { pageSize: 5 } },
+    useGlobalFilter,
+    usePagination
+  );
 
-  const { pageIndex, pageSize } = state;
+  const { pageIndex, pageSize, globalFilter } = state;
 
   const handleConfirm = (rowData) => {
     if (rowData.payment === "Unpaid") {
@@ -175,6 +181,10 @@ const OrganizerRegisteredCamps = () => {
             <div className="my-12 overflow-x-auto">
               <Heading main={"Manage Organized"} sub={"Camps"}></Heading>
               <div className="overflow-x-auto relative">
+                <FilterTable
+                  filter={globalFilter}
+                  setFilter={setGlobalFilter}
+                ></FilterTable>
                 <table
                   {...getTableProps()}
                   className="table table-xs md:table-md overflow-x-auto mt-10"

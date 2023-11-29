@@ -2,13 +2,14 @@
 import { useEffect, useMemo, useState } from "react";
 import useAuth from "../Hooks/useAuth";
 import Loader from "./Shared/Loader";
-import { usePagination, useTable } from "react-table";
+import { useGlobalFilter, usePagination, useTable } from "react-table";
 import Loading from "./Shared/Loading";
 import Heading from "./Shared/Heading";
 import ConfirmToast from "./Shared/ConfirmToast";
 import { axiosSecure } from "../Hooks/useAxios";
 import toast from "react-hot-toast";
 import PaymentModal from "./PaymentModal";
+import FilterTable from "./Shared/FilterTable";
 
 const ParticipantRegisteredCamps = () => {
   const { user } = useAuth();
@@ -98,9 +99,10 @@ const ParticipantRegisteredCamps = () => {
     gotoPage,
     setPageSize,
     pageCount,
+    setGlobalFilter,
     prepareRow,
-  } = useTable({ columns, data, initialState: { pageSize: 5 } }, usePagination);
-  const { pageIndex, pageSize } = state;
+  } = useTable({ columns, data, initialState: { pageSize: 5 } },useGlobalFilter, usePagination);
+  const { pageIndex, pageSize,globalFilter } = state;
   const handlePay = (rowData) => {
     setSelectedRowData(rowData);
   };
@@ -135,6 +137,10 @@ const ParticipantRegisteredCamps = () => {
             <div className="my-12 overflow-x-auto">
               <Heading main={"Manage Registered"} sub={"Camps"}></Heading>
               <div className="overflow-x-auto relative">
+              <FilterTable
+                  filter={globalFilter}
+                  setFilter={setGlobalFilter}
+                ></FilterTable>
                 <table
                   {...getTableProps()}
                   className="table table-xs md:table-md overflow-x-auto mt-10"

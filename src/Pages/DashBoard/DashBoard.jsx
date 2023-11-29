@@ -93,24 +93,29 @@ const DashBoard = () => {
           </div>
         </div>
       )}
-      <li>
-        <NavLink
-          className={({ isActive, isPending }) =>
-            isPending
-              ? "pending"
-              : isActive
-              ? "font-extrabold bg-rose text-white mr-1"
-              : "mr-1"
-          }
-          to={"/dashboard/registered-camps"}
-        >
-          <FaLaptopMedical></FaLaptopMedical>
-          Registered Camps
-        </NavLink>
-      </li>
-      <div>
-        <hr />
-      </div>
+      {role === "organizer" || role === "participant" ? (
+        <>
+          <li>
+            <NavLink
+              className={({ isActive, isPending }) =>
+                isPending
+                  ? "pending"
+                  : isActive
+                  ? "font-extrabold bg-rose text-white mr-1"
+                  : "mr-1"
+              }
+              to={"/dashboard/registered-camps"}
+            >
+              <FaLaptopMedical></FaLaptopMedical>
+              Registered Camps
+            </NavLink>
+          </li>
+          <div>
+            <hr />
+          </div>
+        </>
+      ) : null}
+
       {role === "participant" && (
         <>
           <li>
@@ -151,12 +156,6 @@ const DashBoard = () => {
           </div>
         </>
       )}
-      <li>
-        <a onClick={logOut}>
-          <BiLogOutCircle></BiLogOutCircle>
-          Logout
-        </a>
-      </li>
     </>
   );
   return (
@@ -235,7 +234,6 @@ const DashBoard = () => {
       {/* dashboard section */}
       <div className="drawer lg:drawer-open">
         <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-
         <div className="drawer-content">
           {/* Page content here */}
           <div className="min-h-[calc(100vh-256px)] lg:min-h-[calc(100vh-296px)]">
@@ -256,6 +254,20 @@ const DashBoard = () => {
               <h1 className="font-semibold">{userData?.email}</h1>
             </div>
             <div className="md:mt-20 mt-32">{navLinks}</div>
+            <div className="mt-48 flex items-end ">
+              <div>
+                <hr />
+              </div>
+              <li>
+                <a className="text-xl flex justify-center items-center" onClick={logOut}>
+                  <BiLogOutCircle></BiLogOutCircle>
+                  <p>Logout</p>
+                </a>
+              </li>
+              <div>
+                <hr />
+              </div>
+            </div>
           </ul>
         </div>
       </div>

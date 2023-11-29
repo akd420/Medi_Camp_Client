@@ -3,12 +3,8 @@ import useAuth from "../../Hooks/useAuth";
 import useToast from "./useToast";
 import { motion } from "framer-motion";
 const NavBar = () => {
-  const { user, signOutUser, userData } = useAuth();
+  const { user, signOutUser } = useAuth();
   const toast = useToast();
-  let role = null;
-  if(userData){
-    role = userData?.role;
-  }
   const logOut = () => {
     signOutUser()
       .then(() => {
@@ -49,8 +45,8 @@ const NavBar = () => {
           Available Camps
         </NavLink>
       </li>
-      {
-        role && <li>
+
+      <li>
         <NavLink
           className={({ isActive, isPending }) =>
             isPending
@@ -64,7 +60,7 @@ const NavBar = () => {
           Dashboard
         </NavLink>
       </li>
-      }
+
       <li>
         <NavLink
           className={({ isActive, isPending }) =>
@@ -158,11 +154,15 @@ const NavBar = () => {
           ) : (
             <div className="flex flex-col md:flex-row text-center items-center">
               <Link to={"/login"}>
-                <motion.button className="btn bg-rose text-white btn-xs md:btn-md hover:bg-rose border-none">Login</motion.button>
+                <motion.button className="btn bg-rose text-white btn-xs md:btn-md hover:bg-rose border-none">
+                  Login
+                </motion.button>
               </Link>
               <p className="text-lg mx-2">or</p>
               <Link to={"/register"}>
-                <motion.button className="btn bg-rose text-white btn-xs md:btn-md hover:bg-rose border-none">Register</motion.button>
+                <motion.button className="btn bg-rose text-white btn-xs md:btn-md hover:bg-rose border-none">
+                  Register
+                </motion.button>
               </Link>
             </div>
           )}

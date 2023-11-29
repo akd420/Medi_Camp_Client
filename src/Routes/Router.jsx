@@ -15,6 +15,9 @@ import CampDetails from "../Pages/DashBoard/Pages/CampDetails/CampDetails";
 import Profile from "../Pages/DashBoard/Pages/Profile/Profile";
 import PaymentHistory from "../Pages/DashBoard/Pages/PaymentHistory";
 import Feedback from "../Pages/DashBoard/Pages/Feedback";
+import OrganizerRoute from "./OrganizerRoutes";
+import ParticipantRoutes from "./ParticipantRoutes";
+import NotProRoutes from "./NotProRoutes";
 
 const Router = createBrowserRouter([
   {
@@ -36,7 +39,11 @@ const Router = createBrowserRouter([
       },
       {
         path: "/camps",
-        element: <AvailableCamps></AvailableCamps>,
+        element: (
+          <PrivateRoute>
+            <AvailableCamps></AvailableCamps>,
+          </PrivateRoute>
+        ),
       },
       {
         path: "/camps/:id",
@@ -59,28 +66,62 @@ const Router = createBrowserRouter([
     children: [
       {
         path: "/dashboard/profile",
-        element: <Profile></Profile>
+        element: (
+          <PrivateRoute>
+            <Profile></Profile>,
+          </PrivateRoute>
+        ),
       },
       {
         path: "/dashboard/add-camp",
-        element: <AddCamp></AddCamp>,
+        element: (
+          <PrivateRoute>
+            <OrganizerRoute>
+              <AddCamp></AddCamp>,
+            </OrganizerRoute>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/dashboard/manage-camps",
-        element: <ManageCamps></ManageCamps>,
+        element: (
+          <PrivateRoute>
+            <OrganizerRoute>
+              <ManageCamps></ManageCamps>,
+            </OrganizerRoute>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/dashboard/registered-camps",
-        element: <RegisteredCamps></RegisteredCamps>,
+        element: (
+          <PrivateRoute>
+            <NotProRoutes>
+              <RegisteredCamps></RegisteredCamps>,
+            </NotProRoutes>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/dashboard/payment-history",
-        element: <PaymentHistory></PaymentHistory>,
+        element: (
+          <PrivateRoute>
+            <ParticipantRoutes>
+              <PaymentHistory></PaymentHistory>,
+            </ParticipantRoutes>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/dashboard/feedback",
-        element: <Feedback></Feedback>,
-      }
+        element: (
+          <PrivateRoute>
+            <ParticipantRoutes>
+              <Feedback></Feedback>,
+            </ParticipantRoutes>
+          </PrivateRoute>
+        ),
+      },
     ],
   },
 ]);

@@ -3,7 +3,6 @@ import CampCard from "./Shared/CampCard";
 import Heading from "./Shared/Heading";
 import Loader from "./Shared/Loader";
 import Loading from "./Shared/Loading";
-import ReviewSlider from "./Shared/ReviewSlider";
 import CustomContainer from "./Shared/CustomContainer";
 import ReviewCard from "./ReviewCard";
 
@@ -55,7 +54,7 @@ const OrganizerImpact = () => {
             <div>
               {
                 filterReviewHostEmail.length>0 ?(
-                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                    {
                     filterReviewHostEmail?.map((camp)=><ReviewCard key={camp._id} camp={camp}></ReviewCard>)
                   }

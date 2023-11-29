@@ -11,14 +11,14 @@ import OrganizerImpact from "../organizerImpact";
 import ParticipantImpact from "../ParticipantImpact";
 const ProfileCard = ({ userData, refetch }) => {
   const { user } = useAuth();
-  const photo = user?.photoURL || userLogo
+  const photo = user?.photoURL || userLogo;
   const toast = useToast();
   let roles = userData.role;
   if (roles === "organizer") {
     roles = "Organizer";
   } else if (roles === "participant") {
     roles = "Participant";
-  } else if (roles === "professionals") {
+  } else if (roles === "professional") {
     roles = "Healthcare Professionals";
   }
   const handleSubmit = (e) => {
@@ -30,27 +30,29 @@ const ProfileCard = ({ userData, refetch }) => {
     const gender = form.gender.value;
     const phone = form.phone.value;
     const address = form.address.value;
+    const specialty = form.specialty.value;
+    const certifications = form.certifications.value;
     const submit = {
       name,
       age,
       gender,
       phone,
       address,
+      specialty,
+      certifications,
     };
-    axiosSecure.put(`/users/${userData._id}`,submit)
-    .then((res)=>{
+    axiosSecure.put(`/users/${userData._id}`, submit).then((res) => {
       updateProfile(user, {
         photoURL: image,
-      })
+      });
       console.log(res);
       if (res.status === 200) {
-        document.getElementById(`modal_${userData._id}`).close(true)
+        document.getElementById(`modal_${userData._id}`).close(true);
         toast.success({ content: "Profile Updated Successfully" });
         refetch();
       }
-    })
+    });
   };
- 
 
   return (
     <div>
@@ -75,9 +77,7 @@ const ProfileCard = ({ userData, refetch }) => {
           sm:w-80 sm:mx-0
         "
         >
-          <div className="h-1/2 w-full flex justify-between items-baseline px-3 py-5">
-            <h1 className="text-white">Profile</h1>
-          </div>
+          <div className="h-1/2 w-full flex justify-between items-baseline px-3 py-5"></div>
 
           <div
             className="
@@ -91,22 +91,35 @@ const ProfileCard = ({ userData, refetch }) => {
             shadow-xl
           "
           >
-            <div className="w-full h-1/2 mt-12 mb-6 flex flex-col justify-center items-center space-y-1">
+            <div className="w-full h-1/2 mt-12 mb-6 px-2 flex flex-col justify-center items-center space-y-1">
               <h1 className="font-bold">{userData.name}</h1>
               <h1 className="font-bold">Role: {roles}</h1>
               <h1 className="text-gray-700 text-sm">{userData.email}</h1>
               <h1 className="text-gray-700 text-sm">
                 Phone: {userData.phone ? userData.phone : "N/A"}
               </h1>
-              <h1 className="text-gray-700 text-sm">
+              <h1 className="text-gray-700 text-sm text-justify">
                 Address: {userData.address ? userData.address : "N/A"}
               </h1>
               <h1 className="text-gray-700 text-sm">
                 Age: {userData.age ? userData.age : "N/A"}
               </h1>
               <h1 className="text-gray-700 text-sm">
-                Gender: {userData.gender ? userData.gender.toUpperCase() : "N/A"}
+                Gender:{" "}
+                {userData.gender ? userData.gender.toUpperCase() : "N/A"}
               </h1>
+              {userData.role === "professional" && (
+                <div className="space-y-1">
+                  <h1 className="text-gray-700 text-sm text-justify">
+                    Medical Specialty:{" "}
+                    {userData.specialty ? userData.specialty : "N/A"}
+                  </h1>
+                  <h1 className="text-gray-700 text-sm text-justify">
+                    Certifications:{" "}
+                    {userData.certifications ? userData.certifications : "N/A"}
+                  </h1>
+                </div>
+              )}
               <div
                 onClick={() =>
                   document.getElementById(`modal_${userData._id}`).showModal()
@@ -122,21 +135,21 @@ const ProfileCard = ({ userData, refetch }) => {
         </div>
       </div>
       {/* organizer's impact section  */}
-      {
-        userData.role === "organizer" ? (
-          <div className="mt-52">
-            <OrganizerImpact></OrganizerImpact>
-          </div>
-        ) : ""
-      }
-       {/* participant's impact section  */}
-       {
-        userData.role === "participant" ? (
-          <div className="mt-52">
-            <ParticipantImpact></ParticipantImpact>
-          </div>
-        ) : ""
-      }
+      {userData.role === "organizer" ? (
+        <div className="mt-52">
+          <OrganizerImpact></OrganizerImpact>
+        </div>
+      ) : (
+        ""
+      )}
+      {/* participant's impact section  */}
+      {userData.role === "participant" ? (
+        <div className="mt-52">
+          <ParticipantImpact></ParticipantImpact>
+        </div>
+      ) : (
+        ""
+      )}
       {/* update modal section */}
       <dialog id={`modal_${userData._id}`} className="modal">
         <div className="modal-box">
@@ -212,7 +225,7 @@ const ProfileCard = ({ userData, refetch }) => {
                   <select
                     name="gender"
                     className="select select-bordered w-full"
-                    defaultValue={ userData?.gender ? userData?.gender : ''}
+                    defaultValue={userData?.gender ? userData?.gender : ""}
                   >
                     <option disabled value="">
                       Select Your Gender. . .
@@ -254,6 +267,39 @@ const ProfileCard = ({ userData, refetch }) => {
                 />
               </label>
             </div>
+            {userData.role === "professional" && (
+              <div>
+                <div className="form-control w-full">
+                  <label className="label">
+                    <span className="label-text">Medical Specialty</span>
+                  </label>
+                  <label className="input-group">
+                    <input
+                      type="text"
+                      name="specialty"
+                      defaultValue={userData?.specialty}
+                      placeholder="Enter Your Medical Specialty"
+                      className="input input-bordered w-full"
+                    />
+                  </label>
+                </div>
+                <div className="form-control w-full">
+                  <label className="label">
+                    <span className="label-text">Your Certifications</span>
+                  </label>
+                  <label className="input-group">
+                    <input
+                      type="text"
+                      name="certifications"
+                      defaultValue={userData?.certifications}
+                      placeholder="Enter Your certifications"
+                      className="input input-bordered w-full"
+                    />
+                  </label>
+                </div>
+              </div>
+            )}
+
             <div className="flex justify-center mt-10">
               <CustomButton>
                 <input type="submit" value="Submit" />

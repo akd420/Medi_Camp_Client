@@ -5,6 +5,7 @@ import CustomContainer from "../../Components/Shared/CustomContainer";
 import Heading from "../../Components/Shared/Heading";
 import Loading from "../../Components/Shared/Loading";
 import useAuth from "../../Hooks/useAuth";
+import { Helmet } from "react-helmet-async";
 
 const AvailableCamps = () => {
   const { camps, isLoading } = useAuth();
@@ -36,7 +37,7 @@ const AvailableCamps = () => {
         results = results.sort((a, b) => b.participants - a.participants);
       } else if (sortBy === "leastRegistered") {
         results = results.sort((a, b) => a.participants - b.participants);
-      }    else if (sortBy === "aToZ") {
+      } else if (sortBy === "aToZ") {
         results = results.sort((a, b) =>
           a.campName.localeCompare(b.campName, undefined, {
             sensitivity: "base",
@@ -48,15 +49,11 @@ const AvailableCamps = () => {
             sensitivity: "base",
           })
         );
-      }
-
-
-      else if(sortBy === "highPriced") {
+      } else if (sortBy === "highPriced") {
         results = results.sort((a, b) => a.fees - b.fees);
-      }
-        else if(sortBy === "lowPriced") {
+      } else if (sortBy === "lowPriced") {
         results = results.sort((a, b) => b.fees - a.fees);
-        }
+      }
 
       setFilteredCards(results);
     }
@@ -64,6 +61,9 @@ const AvailableCamps = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>Medicamp | Available Camps</title>
+      </Helmet>
       <CustomContainer>
         {isLoading ? (
           <Loading></Loading>
@@ -125,18 +125,10 @@ const AvailableCamps = () => {
                     <option value="none">Default</option>
                     <option value="mostRegistered">Most Registered</option>
                     <option value="leastRegistered">Least Registered</option>
-                    <option value="aToZ">
-                      A &gt; Z
-                    </option>
-                    <option value="zToA">
-                    Z &gt; A
-                    </option>
-                    <option value="lowPriced">
-                      Fees ( High &gt; Low)
-                    </option>
-                    <option value="highPriced">
-                      Fees ( Low &gt; High)
-                    </option>
+                    <option value="aToZ">A &gt; Z</option>
+                    <option value="zToA">Z &gt; A</option>
+                    <option value="lowPriced">Fees ( High &gt; Low)</option>
+                    <option value="highPriced">Fees ( Low &gt; High)</option>
                   </select>
                 </label>
               </div>

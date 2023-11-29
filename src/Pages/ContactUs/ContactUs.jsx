@@ -1,17 +1,21 @@
 /* eslint-disable react/no-unescaped-entities */
+import { Helmet } from "react-helmet-async";
 import CustomButton from "../../Components/Shared/CustomButton";
 import CustomContainer from "../../Components/Shared/CustomContainer";
 import useToast from "../../Components/Shared/useToast";
 import Map from "./Map";
 
 const ContactUs = () => {
-    const toast = useToast()
-    const handleSubmit = e =>{
-        e.preventDefault();
-        toast.success({content: "Thank you for reaching out!!"});
-    }
+  const toast = useToast();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    toast.success({ content: "Thank you for reaching out!!" });
+  };
   return (
     <div>
+      <Helmet>
+        <title>Medicamp | Contact Us</title>
+      </Helmet>
       <div className="relative overflow-hidden">
         <img
           src="/contactus.jpg"

@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import CustomContainer from "../../Components/Shared/CustomContainer";
 import Testimonials from "../../Components/Testimonials";
 import Banner from "./Banner";
@@ -8,6 +9,9 @@ import PopularCamps from "./PopularCamps";
 const Home = () => {
     return (
         <div>
+            <Helmet>
+                <title>Medicamp | Home</title>
+            </Helmet>
             <CustomContainer>
                 <Banner></Banner>
                 <PopularCamps></PopularCamps>
