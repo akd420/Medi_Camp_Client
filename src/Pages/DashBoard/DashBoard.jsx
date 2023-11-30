@@ -2,7 +2,8 @@ import Footer from "../../Components/Shared/Footer";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
 import { VscFeedback } from "react-icons/vsc";
-import { MdPayments } from "react-icons/md";
+import { MdPayments, MdOutlineWarehouse } from "react-icons/md";
+import { RiFileEditLine } from "react-icons/ri";
 import { motion } from "framer-motion";
 import useAuth from "../../Hooks/useAuth";
 import useToast from "../../Components/Shared/useToast";
@@ -51,6 +52,28 @@ const DashBoard = () => {
       <div>
         <hr />
       </div>
+      {role === "professional" && (
+        <>
+          <li>
+            <NavLink
+              className={({ isActive, isPending }) =>
+                isPending
+                  ? "pending"
+                  : isActive
+                  ? "font-extrabold bg-rose text-white mr-1"
+                  : "mr-1"
+              }
+              to={`/dashboard/accepted-camps`}
+            >
+              <CgProfile></CgProfile>
+              Accepted Camps
+            </NavLink>
+          </li>
+          <div>
+            <hr />
+          </div>
+        </>
+      )}
       {role === "organizer" && (
         <div>
           <div>
@@ -83,7 +106,7 @@ const DashBoard = () => {
                 }
                 to={"/dashboard/add-upcoming-camp"}
               >
-                <FaClinicMedical></FaClinicMedical>
+                <MdOutlineWarehouse></MdOutlineWarehouse>
                 Add Upcoming Camps
               </NavLink>
             </li>
@@ -104,6 +127,24 @@ const DashBoard = () => {
             >
               <FaFileMedicalAlt></FaFileMedicalAlt>
               Manage Camps
+            </NavLink>
+          </li>
+          <div>
+            <hr />
+          </div>
+          <li>
+            <NavLink
+              className={({ isActive, isPending }) =>
+                isPending
+                  ? "pending"
+                  : isActive
+                  ? "font-extrabold bg-rose text-white mr-1"
+                  : "mr-1"
+              }
+              to={"/dashboard/manage-upcoming-camps"}
+            >
+              <RiFileEditLine></RiFileEditLine>
+              Manage Upcoming Camps
             </NavLink>
           </li>
           <div>
@@ -277,7 +318,10 @@ const DashBoard = () => {
                 <hr />
               </div>
               <li>
-                <a className="text-xl flex justify-center items-center" onClick={logOut}>
+                <a
+                  className="text-xl flex justify-center items-center"
+                  onClick={logOut}
+                >
                   <BiLogOutCircle></BiLogOutCircle>
                   <p>Logout</p>
                 </a>

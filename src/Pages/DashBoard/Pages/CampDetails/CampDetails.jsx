@@ -17,7 +17,7 @@ const CampDetails = () => {
         ) : (
           <>
             <Helmet>
-              <title>Medicamp | {camp?.campName}</title>
+              <title>Medicamp | {camp?.campName || "Camp Details"}</title>
             </Helmet>
             <CampDetailsCard camp={camp}></CampDetailsCard>
           </>

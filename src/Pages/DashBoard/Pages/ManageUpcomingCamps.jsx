@@ -1,28 +1,31 @@
 /* eslint-disable react/prop-types */
-import { useMemo, useCallback, useState, useEffect } from "react";
-import { useTable, usePagination, useGlobalFilter } from "react-table";
+import { useCallback, useMemo, useState } from "react";
+import Loader from "../../../Components/Shared/Loader";
 import useAuth from "../../../Hooks/useAuth";
-import Heading from "../../../Components/Shared/Heading";
-import Loading from "../../../Components/Shared/Loading";
-import UpdateModal from "../../../Components/UpdateModal";
-import toast from "react-hot-toast";
-import ConfirmToast from "../../../Components/Shared/ConfirmToast";
-import { Helmet } from "react-helmet-async";
-import FilterTable from "../../../Components/Shared/FilterTable";
 import useAxios from "../../../Hooks/useAxios";
+import { useGlobalFilter, usePagination, useTable } from "react-table";
+import Loading from "../../../Components/Shared/Loading";
+import Heading from "../../../Components/Shared/Heading";
+import FilterTable from "../../../Components/Shared/FilterTable";
+import ConfirmToast from "../../../Components/Shared/ConfirmToast";
+import toast from "react-hot-toast";
+import UpdateModal from "../../../Components/UpdateModal";
+import { Helmet } from "react-helmet-async";
+import ListModal from "../../../Components/ListModal";
 
-const ManageCamps = () => {
-  const { user, camps, isLoading, refetch } = useAuth();
+const ManageUpcomingCamps = () => {
+  const { user, refetch } = useAuth();
+  const hostName = user?.displayName;
+  const hostEmail = user?.email;
+  const upcoming = true;
   const axiosSecure = useAxios();
-  const [filteredCamps, setFilteredCamps] = useState(null);
-  useEffect(() => {
-    refetch().then(() => {
-      setFilteredCamps(camps.filter((camp) => camp.hostEmail === user.email));
-    });
-  }, [camps, refetch, user.email]);
-
+  const {
+    isLoading,
+    data: camps,
+    refetch: upFetch,
+  } = Loader(`upcomingCampsByEmail?email=${user?.email}`, "upcomingByEmail");
   const [selectedRowData, setSelectedRowData] = useState(null);
-
+  const [selectedRowDataForList, setSelectedRowDataForList] = useState(null);
   const getTargetAudienceDisplayName = useCallback((targetAudience) => {
     switch (targetAudience) {
       case "general":
@@ -39,17 +42,23 @@ const ManageCamps = () => {
         return targetAudience;
     }
   }, []);
-
   const columns = useMemo(
     () => [
       { Header: "Camp Name", accessor: "campName" },
       { Header: "Location", accessor: "location" },
-      { Header: "Services", accessor: "services" },
-      { Header: "Professionals", accessor: "professionals" },
       {
         Header: "Target Audience",
         accessor: "targetAudience",
         Cell: ({ value }) => getTargetAudienceDisplayName(value),
+      },
+      {
+        Header: "Interested Participants",
+        accessor: "participants",
+        width: 50,
+      },
+      {
+        Header: "Interested Professionals",
+        accessor: "intProfessionals",
       },
       {
         Header: "Actions",
@@ -57,14 +66,31 @@ const ManageCamps = () => {
         Cell: ({ row }) => (
           <div className="grid items-center justify-center gap-2">
             <button
+              onClick={() => handleList(row.original)}
+              className="btn md:btn-sm bg-rose text-white px-2 py-1"
+            >
+              Interested
+            </button>
+            <button
+              onClick={() => handlePublish(row.original)}
+              className={
+                row.original.participants > 2 &&
+                row.original.intProfessionals > 0
+                  ? "btn md:btn-sm bg-rose text-white px-2 py-1"
+                  : "hidden"
+              }
+            >
+              Publish
+            </button>
+            <button
               onClick={() => handleUpdate(row.original)}
-              className="btn btn-xs md:btn-sm bg-rose text-white px-2 py-1"
+              className="btn md:btn-sm bg-rose text-white px-2 py-1"
             >
               Update
             </button>
             <button
               onClick={() => handleDelete(row.original.id)}
-              className="btn btn-xs md:btn-sm bg-rose text-white px-2 py-1"
+              className="btn md:btn-sm bg-rose text-white px-2 py-1"
             >
               Delete
             </button>
@@ -74,26 +100,26 @@ const ManageCamps = () => {
     ],
     []
   );
-
   const data = useMemo(() => {
-    if (!filteredCamps) {
+    if (!camps) {
       return [];
     }
-
-    return filteredCamps.map((camp) => ({
+    return camps.map((camp) => ({
       campName: camp.campName,
       location: camp.location,
       services: camp.services,
-      professionals: camp.professionals,
       targetAudience: camp.targetAudience,
       fees: camp.fees,
       time: camp.time,
       description: camp.description,
       imageURL: camp.imageURL,
+      participants: camp.participants,
+      intProfessionals: camp.intPro,
+      professionals: camp.professionals,
       id: camp._id,
+      _id: camp._id,
     }));
-  }, [filteredCamps]);
-
+  }, [camps]);
   const {
     getTableProps,
     getTableBodyProps,
@@ -115,15 +141,15 @@ const ManageCamps = () => {
     useGlobalFilter,
     usePagination
   );
-
   const { pageIndex, pageSize, globalFilter } = state;
+  //  actions section
 
+  //   update action done
   const handleUpdate = (rowData) => {
     setSelectedRowData(rowData);
   };
-
+  //   delete action section done
   const handleDelete = (campId) => {
-    // toast tryout
     const confirmToastId = ConfirmToast({
       message: "Are you sure you want to delete this camp?",
       confirmLabel: "Delete",
@@ -132,34 +158,72 @@ const ManageCamps = () => {
       onCancel: () => toast.dismiss(confirmToastId),
     });
   };
-
-  // Function to handle delete confirmation
   const handleDeleteConfirmed = (campId, confirmToastId) => {
-    axiosSecure.delete(`/camp/${campId}?email=${user?.email}`).then((res) => {
-      console.log(res);
-      if (res.status === 200) {
-        refetch();
-        toast.success("Camp deleted successfully!");
-        setTimeout(() => {
-          toast.dismiss(confirmToastId);
-        }, 2000);
-      }
-    });
+    axiosSecure
+      .delete(`/upcomingCamps/${campId}?email=${user?.email}`)
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          upFetch();
+          toast.success("Upcoming Camp deleted successfully!");
+          setTimeout(() => {
+            toast.dismiss(confirmToastId);
+          }, 2000);
+        }
+      });
+  };
+  const handleList = (rowData) => {
+    setSelectedRowDataForList(rowData);
+  };
+  const handlePublish = (rowData) => {
+    if (!rowData?.professionals) {
+      toast.error("Need to accept at least one Professional before publishing");
+      return;
+    }
+    const newCamp = {
+      ...rowData,
+      hostName,
+      hostEmail,
+    };
+    axiosSecure
+      .post(`/camps?email=${user?.email}`, newCamp)
+      .then((res) => {
+        console.log(res);
+        if (res.status == 200) {
+          refetch();
+          axiosSecure
+            .delete(`/upcomingCamps/${rowData.id}?email=${user?.email}`)
+            .then((res) => {
+              console.log(res);
+              if (res.status === 200) {
+                upFetch();
+                setTimeout(() => {}, 2000);
+              }
+            });
+          const added = toast.success("Camp Added to available Successfully");
+          setTimeout(() => {
+            toast.dismiss(added);
+          }, 2000);
+        }
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
   };
 
   return (
     <>
       <Helmet>
-        <title>Medicamp | Manage Camps</title>
+        <title>Medicamp | Manage Upcoming Camps</title>
       </Helmet>
       <div className="my-6 overflow-x-auto">
         {isLoading ? (
           <Loading></Loading>
         ) : (
-          <div className="px-2">
-            {filteredCamps?.length > 0 ? (
+          <div className="mx-2">
+            {camps?.length > 0 ? (
               <div className="my-12 overflow-x-auto">
-                <Heading main={"Manage Your"} sub={"Camps"}></Heading>
+                <Heading main={"Manage Upcoming"} sub={"Camps"}></Heading>
                 <div className="overflow-x-auto relative">
                   <FilterTable
                     filter={globalFilter}
@@ -284,16 +348,27 @@ const ManageCamps = () => {
                   </div>
                 </div>
                 {/* Conditionally render UpdateModal */}
+
                 {selectedRowData && (
                   <UpdateModal
+                    upFetch={upFetch}
+                    upcoming={upcoming}
                     setSelectedRowData={setSelectedRowData}
                     rowData={selectedRowData}
                     open={true}
                   ></UpdateModal>
                 )}
+                {/* Conditionally render listModal */}
+                {selectedRowDataForList && (
+                  <ListModal
+                    setSelectedRowDataForList={setSelectedRowDataForList}
+                    rowData={selectedRowDataForList}
+                    open={true}
+                  ></ListModal>
+                )}
               </div>
             ) : (
-              <Heading main={"No Camps"} sub={"Yet"}></Heading>
+              <Heading main={"No Upcoming"} sub={"Camps"}></Heading>
             )}
           </div>
         )}
@@ -302,4 +377,4 @@ const ManageCamps = () => {
   );
 };
 
-export default ManageCamps;
+export default ManageUpcomingCamps;

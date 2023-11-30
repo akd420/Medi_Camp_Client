@@ -9,7 +9,7 @@ import Heading from "../../../Components/Shared/Heading";
 import useAxios from "../../../Hooks/useAxios";
 
 const AddUpcomingCamps = () => {
-  const { user, refetch } = useAuth();
+  const { user, upFetch } = useAuth();
   const axiosSecure = useAxios();
   const hostName = user?.displayName;
   const hostEmail = user?.email;
@@ -24,7 +24,7 @@ const AddUpcomingCamps = () => {
       ...data,
       hostName,
       hostEmail,
-      intParticipants: 0,
+      participants: 0,
       intPro: 0,
     };
     axiosSecure
@@ -32,8 +32,7 @@ const AddUpcomingCamps = () => {
       .then((res) => {
         console.log(res);
         if (res.status == 200) {
-          refetch();
-
+          upFetch();
           const added = toast.success("Upcoming Camp Added Successfully");
           setTimeout(() => {
             toast.dismiss(added);

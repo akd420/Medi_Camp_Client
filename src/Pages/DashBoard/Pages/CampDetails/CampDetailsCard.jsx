@@ -26,6 +26,7 @@ const CampDetailsCard = ({ camp, upcoming }) => {
     description,
     hostEmail,
     _id,
+    intPro,
   } = camp;
   const eventDate = new Date(time);
   const options = {
@@ -84,17 +85,127 @@ const CampDetailsCard = ({ camp, upcoming }) => {
       time,
       description,
     };
-
+    const growingList = {
+      name,
+      email,
+      age,
+      gender,
+      fee,
+      phone,
+      address,
+      problems,
+      emergency,
+      hostEmail,
+      campId: _id,
+      payment: "Unpaid",
+      confirmation: "Pending",
+      campName,
+      imageURL,
+      location,
+      services,
+      targetAudience,
+      time,
+      description,
+      role,
+    };
+    {
+      !upcoming &&
+        axiosSecure
+          .post(`/registeredCamps?email=${user?.email}`, submit)
+          .then((res) => {
+            console.log(res.data);
+            if (res.status == 200) {
+              document.getElementById("my_modal_2").close(true);
+              toast.success({ content: "Camp Joined Successfully" });
+              axiosSecure
+                .put(`/camps/${_id}?email=${user?.email}`, {
+                  participants: participants + 1,
+                })
+                .then((res) => {
+                  console.log(res.data);
+                });
+            }
+          })
+          .then(() => {
+            refetch();
+          })
+          .catch((error) => {
+            if (error.response && error.response.status === 409) {
+              document.getElementById("my_modal_2").close(true);
+              toast.error({ content: "You have already joined this camp" });
+            } else {
+              toast.error({ content: error.message });
+            }
+          });
+    }
+    {
+      upcoming &&
+        axiosSecure
+          .post(`/growingList?email=${user?.email}`, growingList)
+          .then((res) => {
+            console.log(res.data);
+            if (res.status == 200) {
+              document.getElementById("my_modal_2").close(true);
+              toast.success({ content: "Camp Joined Successfully" });
+              axiosSecure
+                .put(`/upcomingCamps/${_id}?email=${user?.email}`, {
+                  participants: participants + 1,
+                })
+                .then((res) => {
+                  console.log(res.data);
+                });
+            }
+          })
+          .then(() => {
+            console.log("refetching");
+            refetch();
+          })
+          .catch((error) => {
+            if (error.response && error.response.status === 409) {
+              document.getElementById("my_modal_2").close(true);
+              toast.error({ content: "You have already joined this camp" });
+            } else {
+              toast.error({ content: error.message });
+            }
+          });
+    }
+  };
+  const handleJoin = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const name = form.name.value;
+    const email = form.email.value;
+    const phone = form.phone.value;
+    const specialty = form.specialty.value;
+    const qualification = form.qualification.value;
+    const submit = {
+      name,
+      email,
+      phone,
+      specialty,
+      qualification,
+      hostEmail,
+      campId: _id,
+      campName,
+      imageURL,
+      location,
+      services,
+      targetAudience,
+      time,
+      description,
+      confirmation: "Pending",
+      role,
+    };
     axiosSecure
-      .post(`/registeredCamps?email=${user?.email}`, submit)
+      .post(`/growingList?email=${user?.email}`, submit)
       .then((res) => {
         console.log(res.data);
         if (res.status == 200) {
-          document.getElementById("my_modal_2").close(true);
+          document.getElementById("my_modal_3").close(true);
           toast.success({ content: "Camp Joined Successfully" });
           axiosSecure
-            .put(`/camps/${_id}?email=${user?.email}`, {
-              participants: participants + 1,
+            .put(`/upcomingCamps/${_id}?email=${user?.email}`, {
+              intPro: intPro + 1,
             })
             .then((res) => {
               console.log(res.data);
@@ -107,7 +218,7 @@ const CampDetailsCard = ({ camp, upcoming }) => {
       })
       .catch((error) => {
         if (error.response && error.response.status === 409) {
-          document.getElementById("my_modal_2").close(true);
+          document.getElementById("my_modal_3").close(true);
           toast.error({ content: "You have already joined this camp" });
         } else {
           toast.error({ content: error.message });
@@ -135,7 +246,7 @@ const CampDetailsCard = ({ camp, upcoming }) => {
             <p>
               <span className="font-medium">Services:</span> {services}
             </p>
-            {!upcoming && (
+            {professionals && (
               <p>
                 <span className="font-medium">
                   Professionals in Attendance:
@@ -178,14 +289,27 @@ const CampDetailsCard = ({ camp, upcoming }) => {
           ) : (
             ""
           )}
+          {user && upcoming && role === "professional" ? (
+            <div
+              onClick={() => document.getElementById("my_modal_3").showModal()}
+            >
+              <CustomButton>Interested Upcoming</CustomButton>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       </main>
-      {/* modal section */}
+      {/* modal section for participant*/}
       <div>
         <dialog id="my_modal_2" className="modal modal-bottom sm:modal-middle">
           <div className="modal-box">
             <div className="my-4">
-              <Heading main={"Join"} sub={"Camp"}></Heading>
+              {upcoming ? (
+                <Heading main={"Join Upcoming"} sub={"Camp"}></Heading>
+              ) : (
+                <Heading main={"Join"} sub={"Camp"}></Heading>
+              )}
             </div>
             <form action="" onSubmit={handleSubmit}>
               <div className="form-control">
@@ -327,6 +451,103 @@ const CampDetailsCard = ({ camp, upcoming }) => {
                     type="text"
                     name="emergency"
                     placeholder="Enter Emergency Contacts"
+                    className="input input-bordered w-full"
+                    required
+                  />
+                </label>
+              </div>
+              <div className="flex justify-center mt-10">
+                <CustomButton>
+                  <input type="submit" value="Submit" />
+                </CustomButton>
+              </div>
+            </form>
+            <div className="modal-action"></div>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button>close</button>
+          </form>
+        </dialog>
+      </div>
+
+      {/* modal section for organizer*/}
+      <div>
+        <dialog id="my_modal_3" className="modal modal-bottom sm:modal-middle">
+          <div className="modal-box">
+            <div className="my-4">
+              <Heading main={"Interested Upcoming"} sub={"Camp"}></Heading>
+            </div>
+            <form action="" onSubmit={handleJoin}>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Your Name</span>
+                </label>
+                <label className="input-group">
+                  <input
+                    type="text"
+                    name="name"
+                    defaultValue={userData?.name}
+                    placeholder="Your Name"
+                    className="input input-bordered w-full"
+                    required
+                  />
+                </label>
+              </div>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Your Email</span>
+                </label>
+                <label className="input-group">
+                  <input
+                    type="email"
+                    name="email"
+                    defaultValue={userData?.email}
+                    readOnly
+                    placeholder="Enter Your Email"
+                    className="input input-bordered w-full"
+                    required
+                  />
+                </label>
+              </div>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Your Phone Number</span>
+                </label>
+                <label className="input-group">
+                  <input
+                    type="text"
+                    name="phone"
+                    placeholder="Your Phone Number"
+                    className="input input-bordered w-full"
+                    required
+                  />
+                </label>
+              </div>
+              <div className="form-control w-full">
+                <label className="label">
+                  <span className="label-text">Specialization</span>
+                </label>
+                <label className="input-group">
+                  <input
+                    type="text"
+                    name="specialty"
+                    placeholder="Your Specialty"
+                    className="input input-bordered w-full"
+                    required
+                  />
+                </label>
+              </div>
+              <div className="form-control w-full">
+                <label className="label">
+                  <span className="label-text">
+                    Qualification For This Camp
+                  </span>
+                </label>
+                <label className="input-group">
+                  <input
+                    type="text"
+                    name="qualification"
+                    placeholder="What can you provide for this camp?"
                     className="input input-bordered w-full"
                     required
                   />

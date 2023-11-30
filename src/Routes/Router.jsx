@@ -20,6 +20,9 @@ import ParticipantRoutes from "./ParticipantRoutes";
 import NotProRoutes from "./NotProRoutes";
 import AddUpcomingCamps from "../Pages/DashBoard/Pages/AddUpcomingCamps";
 import UpDetails from "../Components/UpDetails";
+import ManageUpcomingCamps from "../Pages/DashBoard/Pages/ManageUpcomingCamps";
+import AcceptedCamps from "../Pages/DashBoard/Pages/AcceptedCamps";
+import ProRoutes from "./ProRoutes";
 
 const Router = createBrowserRouter([
   {
@@ -109,6 +112,16 @@ const Router = createBrowserRouter([
         ),
       },
       {
+        path: "/dashboard/manage-upcoming-camps",
+        element: (
+          <PrivateRoute>
+            <OrganizerRoute>
+              <ManageUpcomingCamps></ManageUpcomingCamps>
+            </OrganizerRoute>
+          </PrivateRoute>
+        ),
+      },
+      {
         path: "/dashboard/registered-camps",
         element: (
           <PrivateRoute>
@@ -125,6 +138,16 @@ const Router = createBrowserRouter([
             <ParticipantRoutes>
               <PaymentHistory></PaymentHistory>,
             </ParticipantRoutes>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/dashboard/accepted-camps",
+        element: (
+          <PrivateRoute>
+            <ProRoutes>
+              <AcceptedCamps></AcceptedCamps>
+            </ProRoutes>
           </PrivateRoute>
         ),
       },

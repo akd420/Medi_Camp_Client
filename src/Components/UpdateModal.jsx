@@ -8,8 +8,14 @@ import useToast from "./Shared/useToast";
 import useAuth from "../Hooks/useAuth";
 import useAxios from "../Hooks/useAxios";
 
-const UpdateModal = ({ rowData, open, setSelectedRowData }) => {
-  const {user, refetch } = useAuth();
+const UpdateModal = ({
+  rowData,
+  open,
+  setSelectedRowData,
+  upcoming,
+  upFetch,
+}) => {
+  const { user, refetch } = useAuth();
   const axiosSecure = useAxios();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const toast = useToast();
@@ -31,19 +37,38 @@ const UpdateModal = ({ rowData, open, setSelectedRowData }) => {
 
   const onSubmit = (data) => {
     console.log("Form data submitted:", data);
-    axiosSecure
-      .put(`/camp/${rowData.id}?email=${user?.email}`, data)
-      .then((res) => {
-        console.log(res);
-        if (res.status === 200) {
-          refetch();
-          closeModal();
-          toast.success({ content: "Camp Updated Successfully" });
-        }
-      })
-      .catch((err) => {
-        toast.error({ content: err.message });
-      });
+    {
+      !upcoming &&
+        axiosSecure
+          .put(`/camp/${rowData.id}?email=${user?.email}`, data)
+          .then((res) => {
+            console.log(res);
+            if (res.status === 200) {
+              refetch();
+              closeModal();
+              toast.success({ content: "Camp Updated Successfully" });
+            }
+          })
+          .catch((err) => {
+            toast.error({ content: err.message });
+          });
+    }
+    {
+      upcoming &&
+        axiosSecure
+          .put(`/upcomingCamps/${rowData.id}?email=${user?.email}`, data)
+          .then((res) => {
+            console.log(res);
+            if (res.status === 200) {
+              upFetch();
+              closeModal();
+              toast.success({ content: "Camp Updated Successfully" });
+            }
+          })
+          .catch((err) => {
+            toast.error({ content: err.message });
+          });
+    }
   };
 
   return (
@@ -64,7 +89,11 @@ const UpdateModal = ({ rowData, open, setSelectedRowData }) => {
             </button>
           </form>
           <div className="my-12">
-            <Heading main={"Update"} sub={"Camp"}></Heading>
+            {!upcoming ? (
+              <Heading main={"Update"} sub={"Camp"}></Heading>
+            ) : (
+              <Heading main={"Update"} sub={"Upcoming Camp"}></Heading>
+            )}
           </div>
 
           {/* update part  */}
@@ -170,40 +199,42 @@ const UpdateModal = ({ rowData, open, setSelectedRowData }) => {
               </div>
             </div>
             {/* Healthcare Professionals in Attendance */}
-            <div className="md:flex mb-8">
-              <div className="form-control w-full">
-                <label className="label">
-                  <span className="label-text">
-                    Healthcare Professionals in Attendance
-                  </span>
-                </label>
-                <label className="input-group">
-                  <Controller
-                    name="professionals"
-                    defaultValue={rowData?.professionals}
-                    control={control}
-                    rules={{
-                      required: "Healthcare Professionals are required",
-                    }}
-                    render={({ field }) => (
-                      <input
-                        type="text"
-                        {...field}
-                        placeholder="Professional Lists...."
-                        className={`input input-bordered w-full ${
-                          errors.professionals ? "input-error" : ""
-                        }`}
-                      />
-                    )}
-                  />
-                </label>
-                {errors.professionals && (
-                  <span className="text-error">
-                    {errors.professionals.message}
-                  </span>
-                )}
+            {!upcoming && (
+              <div className="md:flex mb-8">
+                <div className="form-control w-full">
+                  <label className="label">
+                    <span className="label-text">
+                      Healthcare Professionals in Attendance
+                    </span>
+                  </label>
+                  <label className="input-group">
+                    <Controller
+                      name="professionals"
+                      defaultValue={rowData?.professionals}
+                      control={control}
+                      rules={{
+                        required: "Healthcare Professionals are required",
+                      }}
+                      render={({ field }) => (
+                        <input
+                          type="text"
+                          {...field}
+                          placeholder="Professional Lists...."
+                          className={`input input-bordered w-full ${
+                            errors.professionals ? "input-error" : ""
+                          }`}
+                        />
+                      )}
+                    />
+                  </label>
+                  {errors.professionals && (
+                    <span className="text-error">
+                      {errors.professionals.message}
+                    </span>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
             {/* Venue Location */}
             <div className="md:flex mb-8">
               <div className="form-control w-full">

@@ -8,13 +8,10 @@ const ConfirmToast = ({
   confirmText,
   cancelText,
 }) => {
-  // Create a variable to store the toast ID
   let confirmToastId = null;
 
-  // Show the toast and set the ID
   const showToast = () => {
     const confirmToast = toast.custom((t) => {
-      // Set the toast ID
       confirmToastId = t.id;
 
       return (
@@ -43,7 +40,7 @@ const ConfirmToast = ({
             <button
               onClick={() => {
                 onCancel && onCancel();
-                toast.dismiss(confirmToastId); // Dismiss using the stored ID
+                toast.dismiss(confirmToastId);
               }}
               className="w-full border border-transparent rounded-none p-4 flex items-center justify-center text-sm font-medium text-gray-600 hover:text-gray-500 focus:outline-none"
             >
@@ -54,14 +51,11 @@ const ConfirmToast = ({
       );
     });
 
-    // Set the toast ID
     confirmToastId = confirmToast.id;
   };
 
-  // Show the toast
   showToast();
 
-  // Return the toastId for dismissal
   return confirmToastId;
 };
 

@@ -9,6 +9,7 @@ const UpCard = ({ camp }) => {
     imageURL,
     location,
     services,
+    professionals,
     targetAudience,
     time,
     description,
@@ -62,6 +63,12 @@ const UpCard = ({ camp }) => {
               <p>
                 <span className="font-medium">Services:</span> {services}
               </p>
+              {professionals && (
+                <p>
+                  <span className="font-medium">Professionals in Attendance:</span>{" "}
+                  {professionals}
+                </p>
+              )}
               <p>
                 <span className="font-medium">For:</span> {cat}
               </p>

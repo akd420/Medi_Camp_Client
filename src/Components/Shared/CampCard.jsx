@@ -94,7 +94,9 @@ const CampCard = ({ camp, showJoin, dashboard }) => {
           document.getElementById(`modal_${_id}`).close(true);
           toast.success({ content: "Camp Joined Successfully" });
           axiosSecure
-            .put(`/camps/${_id}?email=${user?.email}`, { participants: participants + 1 })
+            .put(`/camps/${_id}?email=${user?.email}`, {
+              participants: participants + 1,
+            })
             .then((res) => {
               console.log(res.data);
               refetch();
@@ -136,12 +138,14 @@ const CampCard = ({ camp, showJoin, dashboard }) => {
                 <p>
                   <span className="font-medium">Services:</span> {services}
                 </p>
-                <p>
-                  <span className="font-medium">
-                    Professionals in Attendance:
-                  </span>{" "}
-                  {professionals}
-                </p>
+                {professionals && (
+                  <p>
+                    <span className="font-medium">
+                      Professionals in Attendance:
+                    </span>{" "}
+                    {professionals}
+                  </p>
+                )}
                 <p>
                   <span className="font-medium">For:</span> {cat}
                 </p>

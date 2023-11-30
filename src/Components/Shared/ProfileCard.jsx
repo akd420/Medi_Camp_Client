@@ -9,6 +9,7 @@ import { updateProfile } from "firebase/auth";
 import OrganizerImpact from "../organizerImpact";
 import ParticipantImpact from "../ParticipantImpact";
 import useAxios from "../../Hooks/useAxios";
+import ProImpact from "../ProImpact";
 const ProfileCard = ({ userData, refetch }) => {
   const { user } = useAuth();
   const axiosSecure = useAxios();
@@ -147,6 +148,14 @@ const ProfileCard = ({ userData, refetch }) => {
       {userData.role === "participant" ? (
         <div className="mt-52">
           <ParticipantImpact></ParticipantImpact>
+        </div>
+      ) : (
+        ""
+      )}
+      {/* professional's impact section  */}
+      {userData.role === "professional" ? (
+        <div className="mt-72">
+          <ProImpact></ProImpact>
         </div>
       ) : (
         ""
