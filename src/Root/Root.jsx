@@ -16,7 +16,7 @@ const Root = () => {
     <div>
       <NavBar></NavBar>
       <motion.div
-        className="fixed top-18 left-0 right-0 h-3 bg-rose origin-[0] z-50"
+        className="fixed top-18 left-0 right-0 h-3 bg-rose origin-[0] z-20"
         style={{ scaleX }}
       />
       <div className="min-h-[calc(100vh-256px)] lg:min-h-[calc(100vh-296px)]">

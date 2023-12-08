@@ -4,23 +4,6 @@ import Heading from "./Shared/Heading";
 import Loader from "./Shared/Loader";
 import Loading from "./Shared/Loading";
 
-const getModifiedTargetAudienceName = (targetAudience) => {
-  switch (targetAudience) {
-    case "general":
-      return "General Health Checkup";
-    case "pediatric":
-      return "Pediatric Health Camp";
-    case "women":
-      return "Women's Health Camp";
-    case "senior":
-      return "Senior Citizens Health Camp";
-    case "dental":
-      return "Dental Health Camp";
-    default:
-      return targetAudience;
-  }
-};
-
 const ProImpact = () => {
   const { user } = useAuth();
   const dashboard = true;
@@ -35,43 +18,40 @@ const ProImpact = () => {
   return (
     <div className="my-12">
       {isLoading ? (
-        <Loading></Loading>
+        <Loading />
       ) : filteredCamps.length > 0 ? (
         <div>
           <div className="my-12">
-            <Heading main={"Interested"} sub={"Camps"}></Heading>
+            <Heading main={"Interested"} sub={"Camps:"}></Heading>
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <ul className="px-6">
             {filteredCamps.map((camp) => (
-              <CampCard
-                key={camp._id}
-                camp={camp}
-                dashboard={dashboard}
-              ></CampCard>
+              <li className="list-disc text-2xl font-medium" key={camp._id}>
+                {camp.campName}
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       ) : (
         <div className="my-12">
-          <Heading main={"No Interested"} sub={"Camps Found"}></Heading>
+          <Heading main={"No interested"} sub={"camps found"}></Heading>
         </div>
       )}
+
       {isLoading ? (
-        <Loading></Loading>
+        <Loading />
       ) : acceptedCamps.length > 0 ? (
         <div>
           <div className="my-12">
             <Heading main={"Accepted"} sub={"Camps"}></Heading>
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <ul className="px-6">
             {acceptedCamps.map((camp) => (
-              <CampCard
-                key={camp._id}
-                camp={camp}
-                dashboard={dashboard}
-              ></CampCard>
+              <li className="list-disc text-2xl font-medium" key={camp._id}>
+                {camp.campName}
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       ) : (
         <div className="my-12">

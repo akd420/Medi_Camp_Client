@@ -1,11 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
-import useAuth from "../Hooks/useAuth";
-import useToast from "./Shared/useToast";
 
 const DeleteModal = ({ open, rowId, setSelectedRowId }) => {
-  const { refetch } = useAuth();
-  const toast = useToast();
   const [isModalOpen, setIsModalOpen] = useState(false);
   useEffect(() => {
     setIsModalOpen(open);

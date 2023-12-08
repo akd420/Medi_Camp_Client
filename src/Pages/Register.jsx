@@ -50,20 +50,6 @@ const Register = () => {
       return;
     }
     setLoading(true);
-    // createUser(email, password)
-    //   .then((result) => {
-    //     updateProfile(result.user, {
-    //       displayName: name,
-    //       photoURL: image,
-    //     });
-    //     navigate(location?.state ? location.state : "/");
-    //     toast.success({ content: "Registered successfully" });
-    //     setLoading(false);
-    //   })
-    //   .catch((error) => {
-    //     toast.error({ content: error.message });
-    //     setLoading(false);
-    //   });
     try {
       const result = await createUser(email, password);
       await updateProfile(result.user, {
@@ -81,32 +67,7 @@ const Register = () => {
       setLoading(false);
     }
   };
-  // const handleGoogleLogin = async () => {
-  //   setLoading(true);
-  //   googleLogin()
-  //     .then(() => {
-  //       try{
-  //         const userExists = await checkUserExists(user?.email);
-  //         if(userExists){
-  //           navigate(location?.state ? location.state : "/");
-  //           toast.success({ content: "Logged in successfully" });
-  //         } else {
-  //           setShowRoleModal(true);
-  //         }
-  //       } catch(error){
-  //         toast.error({ content: error.message });
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //       toast.success({ content: "Registered successfully" });
-  //       setShowRoleModal(true);
-  //       setLoading(false);
-  //     })
-  //     .catch((error) => {
-  //       toast.error({ content: error.message });
-  //       setLoading(false);
-  //     });
-  // };
+
   const handleGoogleLogin = async () => {
     setLoading(true);
 

@@ -77,7 +77,7 @@ const ParticipantImpact = () => {
           </div>
           <div>
             {uniqueMedicalAreas.map((area) => (
-              <div key={area}>
+              <div key={area} className="px-6">
                 <ul className="list-disc">
                   <li className="text-3xl">{area}</li>
                 </ul>

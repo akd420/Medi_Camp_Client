@@ -9,7 +9,7 @@ import FilterTable from "../../../Components/Shared/FilterTable";
 import { Link } from "react-router-dom";
 
 const AcceptedCamps = () => {
-  const { user } = useAuth();
+  const { user, camps } = useAuth();
   const [filteredCamps, seFilteredCamps] = useState(null);
 
   const {
@@ -57,14 +57,13 @@ const AcceptedCamps = () => {
         accessor: "actions",
         Cell: ({ row }) => (
           <div className="grid items-center justify-center gap-2">
-            {row.original.confirmation === "Accepted" && (
+            {camps?.some((camp) => camp?._id === row.original._id) ? (
               <Link to={`/camps/${row.original._id}`}>
                 <button className="btn md:btn-sm bg-rose text-white px-2 py-1">
                   Details
                 </button>
               </Link>
-            )}
-            {row.original.confirmation === "Pending" && (
+            ) : (
               <Link to={`/upCamps/${row.original._id}`}>
                 <button className="btn md:btn-sm bg-rose text-white px-2 py-1">
                   Details
@@ -124,7 +123,7 @@ const AcceptedCamps = () => {
         <div className="mx-2">
           {filteredCamps?.length > 0 ? (
             <div className="my-12 overflow-x-auto">
-              <Heading main={"Manage Registered"} sub={"Camps"}></Heading>
+              <Heading main={"Accepted"} sub={"Camps"}></Heading>
               <div className="overflow-x-auto relative">
                 <FilterTable
                   filter={globalFilter}
@@ -250,7 +249,7 @@ const AcceptedCamps = () => {
               </div>
             </div>
           ) : (
-            <Heading main={"No Camps Applied"} sub={"Yet"}></Heading>
+            <Heading main={"No Camps Accepted"} sub={"Yet"}></Heading>
           )}
         </div>
       )}
