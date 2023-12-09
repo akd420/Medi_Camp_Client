@@ -4,7 +4,7 @@ Project Name: Medicamp
 
 ## [ Project Live Link](https://medicamp-1eede.web.app/)
 
-## 5 Project features
+## Project features
 
 - There are 6 most popular camps in the most popular camps section with a link to see the details of those camps and a join button to join them. There is also a sorting system to sort by most and least popular camps.
 
