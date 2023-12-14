@@ -90,17 +90,11 @@ const AuthProvider = ({ children }) => {
           .post(`${baseUrl}/jwt`, loggedUser, {
             withCredentials: true,
           })
-          .then((res) => {
-            console.log("token response", res.data);
-          });
       } else {
         axios
           .post(`${baseUrl}/logout`, loggedUser, {
             withCredentials: true,
           })
-          .then((res) => {
-            console.log("logout response", res.data);
-          });
       }
     });
   }, [user]);

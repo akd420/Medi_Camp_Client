@@ -10,7 +10,6 @@ const CheckOutForm = ({ rowData, refetch, closeModal }) => {
   const axiosSecure = useAxios();
   const [error, setError] = useState("");
   const [clientSecret, setClientSecret] = useState("");
-
   const [loading, setLoading] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
@@ -63,9 +62,15 @@ const CheckOutForm = ({ rowData, refetch, closeModal }) => {
     if (confirmError) {
       setError(confirmError.message);
     } else {
-      console.log("payment intent", paymentIntent);
       if (paymentIntent.status === "succeeded") {
-        console.log(paymentIntent.id);
+        const payload = {
+          hostEmail: rowData?.hostEmail,
+          userEmail: user?.email,
+          userName: user?.displayName,
+          campName: rowData?.campName,
+          txId: paymentIntent.id,
+          amount: rowData?.fees,
+        }
         toast.success(
           `Payment Successful. Transaction ID: ${paymentIntent.id}`
         );
@@ -84,6 +89,9 @@ const CheckOutForm = ({ rowData, refetch, closeModal }) => {
           .catch((error) => {
             console.log(error);
           });
+          // send email to host and user
+          axiosSecure
+          .post(`/send-email?email=${user?.email}`, payload)
       }
     }
     setLoading(false);

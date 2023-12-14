@@ -84,6 +84,7 @@ const ParticipantRegisteredCamps = () => {
       confirmation: camp.confirmation,
       time: camp.time,
       id: camp._id,
+      hostEmail: camp.hostEmail,
     }));
   }, [camps]);
   const {
