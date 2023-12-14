@@ -36,7 +36,7 @@ const CheckOutForm = ({ rowData, refetch, closeModal }) => {
     if (card === null) {
       return;
     }
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
+    const { error } = await stripe.createPaymentMethod({
       type: "card",
       card,
     });
@@ -44,7 +44,6 @@ const CheckOutForm = ({ rowData, refetch, closeModal }) => {
       console.log("payment error", error);
       setError(error.message);
     } else {
-      console.log("payment method", paymentMethod);
       setError("");
     }
 
