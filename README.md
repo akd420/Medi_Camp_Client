@@ -6,7 +6,7 @@ Project Name: Medicamp
 
 ## Project features
 
-- There are 6 most popular camps in the most popular camps section with a link to see the details of those camps and a join button to join them. There is also a sorting system to sort by most and least popular camps.
+- There are 6 of the most popular camps in the most popular camps section with a link to see the details of those camps and a join button to join them. There is also a sorting system to sort by most and least popular camps.
 
 - There is a role-based access system to the website. You can select your role when registering for the first time.
 
