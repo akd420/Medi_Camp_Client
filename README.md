@@ -19,5 +19,6 @@ Project Name: Medicamp
 - There is a Contact Us page with map locations using react-leaflet.
 
 - There is a payment gateway system with Stripe.
-  
+
+- Used Nodemailer to send emails with payment information to both the host and the user.
 - I have used Mongoose on the backend.
