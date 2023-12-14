@@ -80,7 +80,6 @@ const CheckOutForm = ({ rowData, refetch, closeModal }) => {
             txId: paymentIntent.id,
           })
           .then((res) => {
-            console.log(res);
             if (res.status === 200) {
               refetch();
               closeModal();

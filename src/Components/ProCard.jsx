@@ -12,13 +12,11 @@ const ProCard = ({ camp, refetch }) => {
     const updatedProfessionals = campPro
       ? `${campPro}, ${camp?.name}`
       : camp?.name;
-    console.log(updatedProfessionals);
     axiosSecure
       .put(`/growingList/${camp._id}?email=${user?.email}`, {
         confirmation: "Accepted",
       })
       .then((res) => {
-        console.log(res.data);
         if (res.status == 200) {
           refetch();
           toast.success("Professional Accepted");
@@ -27,7 +25,6 @@ const ProCard = ({ camp, refetch }) => {
               professionals: updatedProfessionals,
             })
             .then((res) => {
-              console.log(res.data);
               if (res.status == 200) {
                 upFetch();
               }

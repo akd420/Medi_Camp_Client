@@ -142,13 +142,11 @@ const OrganizerRegisteredCamps = () => {
   };
 
   const handleConfirmConfirmed = (campId, confirmToastId) => {
-    console.log("Confirming registration with ID:", campId);
     axiosSecure
       .put(`/registeredCamp/${campId}?email=${user?.email}`, {
         confirmation: "Confirmed",
       })
       .then((res) => {
-        console.log(res);
         if (res.status === 200) {
           refetch();
           toast.success("Registration Confirmed Successfully");
@@ -160,9 +158,7 @@ const OrganizerRegisteredCamps = () => {
   };
 
   const handleCancelConfirmed = (campId, confirmToastId) => {
-    console.log("Deleting registration with ID:", campId);
     axiosSecure.delete(`/registeredCamps/${campId}?email=${user?.email}`).then((res) => {
-      console.log(res);
       if (res.status === 200) {
         refetch();
         toast.success("Registration Cancelled Successfully");

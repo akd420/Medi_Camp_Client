@@ -109,7 +109,6 @@ const ParticipantRegisteredCamps = () => {
     setSelectedRowData(rowData);
   };
   const handleCancel = (campId) => {
-    console.log("Cancel clicked", campId.id);
     const confirmToastId = ConfirmToast({
       message: "Are you sure you want to cancel?",
       onConfirm: () => handleCancelConfirmed(campId.id, confirmToastId),
@@ -117,9 +116,7 @@ const ParticipantRegisteredCamps = () => {
     });
   };
   const handleCancelConfirmed = (campId, confirmToastId) => {
-    console.log("Deleting registration with ID:", campId);
     axiosSecure.delete(`/registeredCamps/${campId}?email=${user?.email}`).then((res) => {
-      console.log(res);
       if (res.status === 200) {
         refetch();
         toast.success("Registration Cancelled Successfully");

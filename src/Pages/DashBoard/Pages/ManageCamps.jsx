@@ -136,7 +136,6 @@ const ManageCamps = () => {
   // Function to handle delete confirmation
   const handleDeleteConfirmed = (campId, confirmToastId) => {
     axiosSecure.delete(`/camp/${campId}?email=${user?.email}`).then((res) => {
-      console.log(res);
       if (res.status === 200) {
         refetch();
         toast.success("Camp deleted successfully!");

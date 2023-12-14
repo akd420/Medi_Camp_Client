@@ -21,7 +21,6 @@ const AddCamp = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log("Form data submitted:", data);
     const newCamp = {
       ...data,
       hostName,
@@ -31,7 +30,6 @@ const AddCamp = () => {
     axiosSecure
       .post(`/camps?email=${user?.email}`, newCamp)
       .then((res) => {
-        console.log(res);
         if (res.status == 200) {
           refetch();
 

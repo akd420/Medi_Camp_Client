@@ -89,7 +89,6 @@ const CampCard = ({ camp, showJoin, dashboard }) => {
     axiosSecure
       .post(`/registeredCamps?email=${user?.email}`, submit)
       .then((res) => {
-        console.log(res.data);
         if (res.status == 200) {
           document.getElementById(`modal_${_id}`).close(true);
           toast.success({ content: "Camp Joined Successfully" });
@@ -97,8 +96,7 @@ const CampCard = ({ camp, showJoin, dashboard }) => {
             .put(`/camps/${_id}?email=${user?.email}`, {
               participants: participants + 1,
             })
-            .then((res) => {
-              console.log(res.data);
+            .then(() => {
               refetch();
             });
         }

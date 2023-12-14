@@ -29,7 +29,6 @@ const ReviewModal = ({ rowData, open, setSelectedRowData, refetch }) => {
         reviewPhoto,
       })
       .then((res) => {
-        console.log(res.data);
         refetch();
         closeModal();
         toast.success("Review Added Successfully");

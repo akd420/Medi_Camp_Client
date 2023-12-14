@@ -29,19 +29,14 @@ const ParticipantCard = ({ camp, refetch }) => {
       targetAudience: camp.targetAudience,
       description: camp.description,
     };
-    console.log(submit);
     axiosSecure
       .post(`/registeredCamps?email=${user?.email}`, submit)
       .then((res) => {
-        console.log(res.data);
         if (res.status == 200) {
           toast.success("Participant Accepted");
           //  delete from growing list
           axiosSecure
             .delete(`/growingList/${camp._id}?email=${user?.email}`, {})
-            .then((res) => {
-              console.log(res.data);
-            })
             .catch((error) => {
               toast.error({ content: error.message });
             });

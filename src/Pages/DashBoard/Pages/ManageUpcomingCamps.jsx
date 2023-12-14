@@ -162,7 +162,6 @@ const ManageUpcomingCamps = () => {
     axiosSecure
       .delete(`/upcomingCamps/${campId}?email=${user?.email}`)
       .then((res) => {
-        console.log(res);
         if (res.status === 200) {
           upFetch();
           toast.success("Upcoming Camp deleted successfully!");
@@ -188,13 +187,11 @@ const ManageUpcomingCamps = () => {
     axiosSecure
       .post(`/camps?email=${user?.email}`, newCamp)
       .then((res) => {
-        console.log(res);
         if (res.status == 200) {
           refetch();
           axiosSecure
             .delete(`/upcomingCamps/${rowData.id}?email=${user?.email}`)
             .then((res) => {
-              console.log(res);
               if (res.status === 200) {
                 upFetch();
                 setTimeout(() => {}, 2000);

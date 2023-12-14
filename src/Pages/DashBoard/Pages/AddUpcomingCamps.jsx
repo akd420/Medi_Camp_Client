@@ -19,7 +19,6 @@ const AddUpcomingCamps = () => {
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
-    console.log("Form data submitted:", data);
     const newCamp = {
       ...data,
       hostName,
@@ -30,7 +29,6 @@ const AddUpcomingCamps = () => {
     axiosSecure
       .post(`/upcomingCamps?email=${user?.email}`, newCamp)
       .then((res) => {
-        console.log(res);
         if (res.status == 200) {
           upFetch();
           const added = toast.success("Upcoming Camp Added Successfully");

@@ -113,7 +113,6 @@ const CampDetailsCard = ({ camp, upcoming }) => {
         axiosSecure
           .post(`/registeredCamps?email=${user?.email}`, submit)
           .then((res) => {
-            console.log(res.data);
             if (res.status == 200) {
               document.getElementById("my_modal_2").close(true);
               toast.success({ content: "Camp Joined Successfully" });
@@ -121,9 +120,6 @@ const CampDetailsCard = ({ camp, upcoming }) => {
                 .put(`/camps/${_id}?email=${user?.email}`, {
                   participants: participants + 1,
                 })
-                .then((res) => {
-                  console.log(res.data);
-                });
             }
           })
           .then(() => {
@@ -143,7 +139,6 @@ const CampDetailsCard = ({ camp, upcoming }) => {
         axiosSecure
           .post(`/growingList?email=${user?.email}`, growingList)
           .then((res) => {
-            console.log(res.data);
             if (res.status == 200) {
               document.getElementById("my_modal_2").close(true);
               toast.success({ content: "Camp Joined Successfully" });
@@ -151,13 +146,9 @@ const CampDetailsCard = ({ camp, upcoming }) => {
                 .put(`/upcomingCamps/${_id}?email=${user?.email}`, {
                   participants: participants + 1,
                 })
-                .then((res) => {
-                  console.log(res.data);
-                });
             }
           })
           .then(() => {
-            console.log("refetching");
             refetch();
           })
           .catch((error) => {
@@ -199,7 +190,6 @@ const CampDetailsCard = ({ camp, upcoming }) => {
     axiosSecure
       .post(`/growingList?email=${user?.email}`, submit)
       .then((res) => {
-        console.log(res.data);
         if (res.status == 200) {
           document.getElementById("my_modal_3").close(true);
           toast.success({ content: "Camp Joined Successfully" });
@@ -207,13 +197,9 @@ const CampDetailsCard = ({ camp, upcoming }) => {
             .put(`/upcomingCamps/${_id}?email=${user?.email}`, {
               intPro: intPro + 1,
             })
-            .then((res) => {
-              console.log(res.data);
-            });
         }
       })
       .then(() => {
-        console.log("refetching");
         refetch();
       })
       .catch((error) => {

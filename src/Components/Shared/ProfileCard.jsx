@@ -47,7 +47,6 @@ const ProfileCard = ({ userData, refetch }) => {
       updateProfile(user, {
         photoURL: image,
       });
-      console.log(res);
       if (res.status === 200) {
         document.getElementById(`modal_${userData._id}`).close(true);
         toast.success({ content: "Profile Updated Successfully" });

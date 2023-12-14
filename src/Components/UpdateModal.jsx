@@ -36,13 +36,11 @@ const UpdateModal = ({
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log("Form data submitted:", data);
     {
       !upcoming &&
         axiosSecure
           .put(`/camp/${rowData.id}?email=${user?.email}`, data)
           .then((res) => {
-            console.log(res);
             if (res.status === 200) {
               refetch();
               closeModal();
@@ -58,7 +56,6 @@ const UpdateModal = ({
         axiosSecure
           .put(`/upcomingCamps/${rowData.id}?email=${user?.email}`, data)
           .then((res) => {
-            console.log(res);
             if (res.status === 200) {
               upFetch();
               closeModal();
