@@ -16,20 +16,35 @@ const AvailableCamps = () => {
 
   useEffect(() => {
     if (camps) {
-      let results = camps.filter((camp) => {
+      let results = camps?.filter((camp) => {
         if (selectedCategory === "all") {
-          return camp.campName
-            .toLowerCase()
-            .includes(searchValue.toLowerCase());
+          return (
+            camp.campName.toLowerCase().includes(searchValue.toLowerCase()) ||
+            camp.fees.toString().includes(searchValue) ||
+            camp.description
+              .toLowerCase()
+              .includes(searchValue.toLowerCase()) ||
+            camp.services.toLowerCase().includes(searchValue.toLowerCase()) ||
+            camp.professionals
+              .toLowerCase()
+              .includes(searchValue.toLowerCase()) ||
+            camp.location.toLowerCase().includes(searchValue.toLowerCase())
+          );
         }
         const categoryMatch = camp.targetAudience
           ? camp.targetAudience
               .toLowerCase()
               .includes(selectedCategory.toLowerCase())
           : false;
-        const searchMatch = camp.campName
-          .toLowerCase()
-          .includes(searchValue.toLowerCase());
+        const searchMatch =
+          camp.campName.toLowerCase().includes(searchValue.toLowerCase()) ||
+          camp.fees.toString().includes(searchValue) ||
+          camp.description.toLowerCase().includes(searchValue.toLowerCase()) ||
+          camp.services.toLowerCase().includes(searchValue.toLowerCase()) ||
+          camp.professionals
+            .toLowerCase()
+            .includes(searchValue.toLowerCase()) ||
+          camp.location.toLowerCase().includes(searchValue.toLowerCase());
         return categoryMatch && searchMatch;
       });
 
