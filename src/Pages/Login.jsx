@@ -91,7 +91,7 @@ const Login = () => {
       <Helmet>
         <title>Medicamp | Login</title>
       </Helmet>
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex justify-center items-center min-h-screen bg-[url('/image_160.png')] bg-no-repeat bg-cover">
         <div className="flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900">
           <div className="mb-8 text-center">
             <h1 className="my-3 text-4xl text-rose font-bold">Log In</h1>
